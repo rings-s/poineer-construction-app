@@ -3,6 +3,15 @@ export default {
     content: ['./src/**/*.{html,js,svelte}'],
     theme: {
       extend: {
+        backdropBlur: {
+          'xs': '2px',
+          'sm': '4px',
+          'md': '12px',
+          'lg': '16px',
+          'xl': '24px',
+          '2xl': '40px',
+          '3xl': '64px'
+        },
         animation: {
           'float': 'float 6s ease-in-out infinite',
           'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',

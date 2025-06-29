@@ -330,7 +330,6 @@ p {
   opacity: 0;
   transform: translateY(50px);
 }
-
 /* Animate on scroll */
 .animate-on-scroll {
   opacity: 0;
