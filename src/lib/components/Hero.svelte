@@ -143,10 +143,10 @@
       <!-- Simple title without animations -->
       <h1 class="mb-6 hero-title">
         <span class="block text-gradient mb-2">{$t('hero.title1')}</span>
-        <span class="block text-gradient dark:text-white">{$t('hero.title2')}</span>
+        <span class="block text-neutral-900 dark:text-white">{$t('hero.title2')}</span>
       </h1>
       
-      <p bind:this={subtitleRef} class="text-xl md:text-2xl text-neutral-900 dark:text-neutral-300 mb-8 max-w-2xl mx-auto">
+      <p bind:this={subtitleRef} class="text-xl md:text-2xl text-neutral-600 dark:text-neutral-300 mb-8 max-w-2xl mx-auto">
         {$t('hero.subtitle')}
       </p>
       
