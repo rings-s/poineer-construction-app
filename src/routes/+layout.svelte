@@ -1,3 +1,4 @@
+<!-- src/routes/+layout.svelte (CSS-Only Version) -->
 <script>
 	import '../app.css';
 	import { onMount } from 'svelte';
@@ -6,25 +7,19 @@
 	import Footer from '$lib/components/Footer.svelte';
 	import { browser } from '$app/environment';
 	import { animations } from '$lib/utils/animations.js';
-	import gsap from 'gsap';
 	
 	let mounted = false;
-	let mainContent;
+	let currentPath = '';
+	
+	$: if (browser) {
+	  currentPath = $page.url.pathname;
+	}
 	
 	onMount(() => {
 	  mounted = true;
-	  
-	  // Initialize animations
 	  animations.init();
 	  
-	  // Page transition animation
-	  gsap.from(mainContent, {
-		opacity: 0,
-		duration: 0.6,
-		ease: 'power2.out'
-	  });
-	  
-	  // Intersection Observer for animations
+	  // Setup scroll animations
 	  const observer = new IntersectionObserver((entries) => {
 		entries.forEach(entry => {
 		  if (entry.isIntersecting) {
@@ -33,23 +28,28 @@
 		});
 	  }, { threshold: 0.1 });
 	  
-	  document.querySelectorAll('.animate-on-scroll').forEach(el => {
-		observer.observe(el);
+	  const observeElements = () => {
+		document.querySelectorAll('.animate-on-scroll:not(.animate-in)').forEach(el => {
+		  observer.observe(el);
+		});
+	  };
+	  
+	  // Initial observation
+	  setTimeout(observeElements, 100);
+	  
+	  // Re-observe on navigation
+	  const unsubscribe = page.subscribe(() => {
+		if (mounted) {
+		  setTimeout(observeElements, 300);
+		}
 	  });
 	  
 	  return () => {
 		observer.disconnect();
-		animations.destroy();
+		unsubscribe();
+		animations.cleanup();
 	  };
 	});
-	
-	// Page transition state
-	let transitioning = false;
-	
-	$: if (browser && mounted && $page) {
-	  transitioning = true;
-	  setTimeout(() => transitioning = false, 300);
-	}
   </script>
   
   <svelte:head>
@@ -57,23 +57,41 @@
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
   </svelte:head>
   
-  <div class="min-h-screen flex flex-col">
+  <div class="min-h-screen flex flex-col page-wrapper">
 	<Header />
 	
-	<main bind:this={mainContent} class="flex-grow relative overflow-hidden pt-16">
-	  {#if transitioning}
-		<div class="page-transition fixed inset-0 bg-primary-600 z-50 transition-transform duration-300"
-			 style="transform: translateX({transitioning ? '0' : '100%'})">
+	<main class="flex-grow relative pt-16">
+	  {#key currentPath}
+		<div class="page-container page-fade-in">
+		  <slot />
 		</div>
-	  {/if}
-	  
-	  <slot />
+	  {/key}
 	</main>
 	
 	<Footer />
   </div>
   
   <style>
+	.page-container {
+	  width: 100%;
+	  min-height: calc(100vh - 4rem);
+	}
+	
+	.page-fade-in {
+	  animation: pageEntry 0.5s ease-out forwards;
+	}
+	
+	@keyframes pageEntry {
+	  from {
+		opacity: 0;
+		transform: translateY(20px);
+	  }
+	  to {
+		opacity: 1;
+		transform: translateY(0);
+	  }
+	}
+	
 	:global(.animate-on-scroll) {
 	  opacity: 0;
 	  transform: translateY(30px);
@@ -85,7 +103,17 @@
 	  transform: translateY(0);
 	}
 	
-	.page-transition {
-	  transform-origin: right center;
+	/* Respect reduced motion preferences */
+	@media (prefers-reduced-motion: reduce) {
+	  .page-fade-in {
+		animation: none;
+	  }
+	  
+	  :global(.animate-on-scroll) {
+		animation: none;
+		transition: none;
+		opacity: 1;
+		transform: none;
+	  }
 	}
   </style>
