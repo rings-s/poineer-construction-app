@@ -1,108 +1,26 @@
-<!-- src/routes/contact/+page.svelte -->
 <script>
-  import { onMount } from 'svelte';
-  import AnimatedSection from '$lib/components/AnimatedSection.svelte';
+  import { t } from '$lib/stores/locale.js';
   import ContactForm from '$lib/components/ContactForm.svelte';
-  import { animations, createScrollObserver, animationPresets } from '$lib/utils/animations.js';
   
-  let heroSection;
-  let contactCards = [];
-  let mapContainer;
-  let faqItems = [];
-  
-  onMount(() => {
-    animations.init();
-    
-    // Hero animation
-    if (heroSection) {
-      animations.fadeIn(heroSection, animationPresets.hero.title);
-    }
-    
-    // Contact cards stagger animation
-    if (contactCards.length > 0) {
-      const contactObserver = createScrollObserver((target) => {
-        animations.staggerIn(contactCards, { 
-          duration: 0.8, 
-          stagger: 0.2, 
-          delay: 0.5,
-          y: 50
-        });
-        contactObserver.unobserve(target);
-      });
-      
-      if (contactCards[0]) {
-        contactObserver.observe(contactCards[0].parentElement);
-      }
-    }
-    
-    // Map container animation
-    if (mapContainer) {
-      const mapObserver = createScrollObserver((target) => {
-        animations.scaleIn(mapContainer, { delay: 0.8 });
-        mapObserver.unobserve(target);
-      });
-      
-      mapObserver.observe(mapContainer);
-    }
-    
-    // FAQ items animation
-    if (faqItems.length > 0) {
-      const faqObserver = createScrollObserver((target) => {
-        animations.staggerIn(faqItems, { stagger: 0.1, delay: 0.3 });
-        faqObserver.unobserve(target);
-      });
-      
-      if (faqItems[0]) {
-        faqObserver.observe(faqItems[0].parentElement);
-      }
-    }
-    
-    // Setup scroll observer for sections
-    const sectionObserver = createScrollObserver((target) => {
-      target.classList.add('animate-in');
-    });
-    
-    document.querySelectorAll('.animate-on-scroll').forEach(el => {
-      sectionObserver.observe(el);
-    });
-    
-    return () => {
-      animations.cleanup();
-    };
-  });
-  
-  // Contact information from Pioneer Consultants document
   const contactInfo = [
     {
-      icon: '📧',
-      title: 'Email Us',
-      content: 'info@pioneerconsultants.com',
+      icon: `<svg style="width: 2rem; height: 2rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>`,
+      title: 'contact.info.email.title',
+      content: 'contact.info.email.value',
       link: 'mailto:info@pioneerconsultants.com'
     },
     {
-      icon: '📞',
-      title: 'Call Us',
-      content: '+44 (0) 123 456 7890',
+      icon: `<svg style="width: 2rem; height: 2rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>`,
+      title: 'contact.info.phone.title',
+      content: 'contact.info.phone.value',
       link: 'tel:+441234567890'
     },
     {
-      icon: '📍',
-      title: 'Service Area',
-      content: 'Serving clients across the West Midlands and surrounding areas',
+      icon: `<svg style="width: 2rem; height: 2rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>`,
+      title: 'contact.info.location.title',
+      content: 'contact.info.location.value',
       link: null
     }
-  ];
-  
-  const officeHours = [
-    { day: 'Monday - Friday', hours: '9:00 AM - 6:00 PM' },
-    { day: 'Saturday', hours: '10:00 AM - 4:00 PM' },
-    { day: 'Sunday', hours: 'Closed' }
-  ];
-  
-  const serviceAreas = [
-    { name: 'Birmingham', coverage: 'City Centre & Surrounding Areas' },
-    { name: 'Coventry', coverage: 'Full Coverage' },
-    { name: 'Wolverhampton', coverage: 'Complete Service Area' }
   ];
 </script>
 
@@ -111,162 +29,159 @@
   <meta name="description" content="Get in touch with Pioneer Consultants Limited for your construction consultancy needs across the West Midlands." />
 </svelte:head>
 
-<div class="min-h-screen">
-  <!-- Hero Section -->
-  <section bind:this={heroSection} class="relative py-20 bg-gradient-to-br from-primary-50 to-accent-50 dark:from-neutral-900 dark:to-neutral-800">
-    <div class="container mx-auto px-4">
-      <div class="max-w-3xl mx-auto text-center">
-        <h1 class="mb-6">Let's Start Your Next Project Together</h1>
-        <p class="text-xl text-neutral-600 dark:text-neutral-300">
-          Ready to transform your vision into reality? Our expert team at Pioneer Consultants 
-          is here to help across the West Midlands and surrounding areas.
+<!-- Hero Section -->
+<section class="section">
+  <div class="container">
+    <div style="text-align: center;">
+      <h1 style="font-size: 2.5rem; margin-bottom: var(--space-4);">{$t('contact.hero.title')}</h1>
+      <p style="font-size: 1rem; color: var(--text-gray); max-width: 35rem; margin: 0 auto;">
+        {$t('contact.hero.subtitle')}
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- Contact Information -->
+<section class="section" style="background: var(--bg-gray);">
+  <div class="container-wide">
+    <div class="grid-3" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: var(--space-6); margin-bottom: var(--space-12);">
+      {#each contactInfo as info}
+        <div class="card" style="text-align: center;">
+          <div style="color: var(--text-dark); margin-bottom: var(--space-4); display: flex; justify-content: center;">
+            {@html info.icon}
+          </div>
+          <h3 style="margin-bottom: var(--space-3);">{$t(info.title)}</h3>
+          {#if info.link}
+            <a href={info.link} style="color: var(--text-dark); text-decoration: none; font-weight: 500;">
+              {$t(info.content)}
+            </a>
+          {:else}
+            <p style="color: var(--text-gray);">{$t(info.content)}</p>
+          {/if}
+        </div>
+      {/each}
+    </div>
+    
+    <!-- Contact Form and Office Hours -->
+    <div class="grid-2" style="display: grid; grid-template-columns: 2fr 1fr; gap: var(--space-10);">
+      <!-- Contact Form -->
+      <div>
+        <ContactForm />
+      </div>
+      
+      <!-- Office Hours -->
+      <div class="card">
+        <h3 style="margin-bottom: var(--space-4);">{$t('contact.office.title')}</h3>
+        <div style="margin-bottom: var(--space-4);">
+          <div style="display: flex; justify-content: space-between; padding: var(--space-2) 0; border-bottom: 1px solid var(--bg-gray);">
+            <span class="subtitle" style="color: var(--text-dark);">Monday - Friday</span>
+            <span style="font-size: 0.75rem; color: var(--text-gray);">9:00 AM - 6:00 PM</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; padding: var(--space-2) 0; border-bottom: 1px solid var(--bg-gray);">
+            <span class="subtitle" style="color: var(--text-dark);">Saturday</span>
+            <span style="font-size: 0.75rem; color: var(--text-gray);">10:00 AM - 4:00 PM</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; padding: var(--space-2) 0;">
+            <span class="subtitle" style="color: var(--text-dark);">Sunday</span>
+            <span style="font-size: 0.75rem; color: var(--text-gray);">Closed</span>
+          </div>
+        </div>
+        
+        <div>
+          <h4 class="subtitle" style="margin-bottom: var(--space-3); color: var(--text-dark);">{$t('contact.office.emergency')}</h4>
+          <p style="font-size: 0.75rem;">
+            {$t('contact.office.emergencyText')}
+            <a href="tel:+447000000000" style="color: var(--text-dark); font-weight: 500;">
+              +44 (0) 700 000 0000
+            </a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Service Area Section -->
+<section class="section">
+  <div class="container-wide">
+    <h2 style="text-align: center; margin-bottom: var(--space-8);">{$t('contact.serviceArea.title')}</h2>
+    <div style="aspect-ratio: 16/9; background: var(--bg-gray); border-radius: var(--space-2); display: flex; align-items: center; justify-content: center; margin-bottom: var(--space-8);">
+      <div style="text-align: center;">
+        <div style="color: var(--text-gray); margin-bottom: var(--space-3); display: flex; justify-content: center;">
+          <svg style="width: 3rem; height: 3rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path>
+          </svg>
+        </div>
+        <p style="color: var(--text-gray); font-weight: 500;">Interactive Map Coming Soon</p>
+        <p class="subtitle" style="margin-top: var(--space-2); color: var(--text-gray);">
+          {$t('contact.serviceArea.subtitle')}
         </p>
       </div>
     </div>
-  </section>
-  
-  <!-- Contact Information -->
-  <section class="py-20">
-    <div class="container mx-auto px-4">
-      <div class="grid md:grid-cols-3 gap-8 mb-16">
-        {#each contactInfo as info, i}
-          <div bind:this={contactCards[i]} class="contact-card text-center p-8 neumorphic-card hover:scale-105 transition-transform duration-300">
-            <div class="text-5xl mb-4">{info.icon}</div>
-            <h3 class="text-xl font-bold mb-2">{info.title}</h3>
-            {#if info.link}
-              <a href={info.link} 
-                 class="text-primary-600 hover:text-primary-700 dark:text-primary-400 
-                        dark:hover:text-primary-300 transition-colors">
-                {info.content}
-              </a>
-            {:else}
-              <p class="text-neutral-600 dark:text-neutral-300">{info.content}</p>
-            {/if}
-          </div>
-        {/each}
+    
+    <!-- Service Areas List -->
+    <div class="grid-3" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr)); gap: var(--space-6);">
+      <div style="text-align: center;">
+        <h4 class="subtitle" style="margin-bottom: var(--space-2); color: var(--text-dark);">Birmingham</h4>
+        <p style="font-size: 0.75rem; color: var(--text-gray);">{$t('contact.serviceArea.areas.birmingham')}</p>
       </div>
+      <div style="text-align: center;">
+        <h4 class="subtitle" style="margin-bottom: var(--space-2); color: var(--text-dark);">Coventry</h4>
+        <p style="font-size: 0.75rem; color: var(--text-gray);">{$t('contact.serviceArea.areas.coventry')}</p>
+      </div>
+      <div style="text-align: center;">
+        <h4 class="subtitle" style="margin-bottom: var(--space-2); color: var(--text-dark);">Wolverhampton</h4>
+        <p style="font-size: 0.75rem; color: var(--text-gray);">{$t('contact.serviceArea.areas.wolverhampton')}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ Section -->
+<section class="section" style="background: var(--bg-gray);">
+  <div class="container">
+    <h2 style="text-align: center; margin-bottom: var(--space-8);">{$t('contact.faq.title')}</h2>
+    
+    <div style="display: flex; flex-direction: column; gap: var(--space-4);">
+      <details class="card">
+        <summary style="cursor: pointer; font-weight: 600; font-size: 0.875rem; display: flex; justify-content: space-between; align-items: center;">
+          {$t('contact.faq.questions.timeline.question')}
+          <span style="font-size: 1.25rem; color: var(--text-gray);">+</span>
+        </summary>
+        <p style="margin-top: var(--space-3); font-size: 0.875rem; color: var(--text-gray);">
+          {$t('contact.faq.questions.timeline.answer')}
+        </p>
+      </details>
       
-      <!-- Contact Form and Office Hours -->
-      <div class="grid lg:grid-cols-3 gap-12">
-        <!-- Contact Form - Takes 2 columns -->
-        <div class="lg:col-span-2">
-          <ContactForm />
-        </div>
-        
-        <!-- Office Hours -->
-        <div>
-          <div class="glass-card animate-on-scroll">
-            <h3 class="text-2xl font-bold mb-6">Office Hours</h3>
-            <div class="space-y-4">
-              {#each officeHours as schedule}
-                <div class="flex justify-between items-center py-3 border-b border-neutral-200 dark:border-neutral-700">
-                  <span class="font-medium text-neutral-700 dark:text-neutral-300">{schedule.day}</span>
-                  <span class="text-neutral-600 dark:text-neutral-400">{schedule.hours}</span>
-                </div>
-              {/each}
-            </div>
-            
-            <div class="mt-8">
-              <h4 class="font-semibold mb-3">Emergency Support</h4>
-              <p class="text-neutral-600 dark:text-neutral-300 text-sm">
-                For urgent matters outside office hours, please call our emergency line at 
-                <a href="tel:+447000000000" class="text-primary-600 dark:text-primary-400">
-                  +44 (0) 700 000 0000
-                </a>
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
+      <details class="card">
+        <summary style="cursor: pointer; font-weight: 600; font-size: 0.875rem; display: flex; justify-content: space-between; align-items: center;">
+          {$t('contact.faq.questions.consultation.question')}
+          <span style="font-size: 1.25rem; color: var(--text-gray);">+</span>
+        </summary>
+        <p style="margin-top: var(--space-3); font-size: 0.875rem; color: var(--text-gray);">
+          {$t('contact.faq.questions.consultation.answer')}
+        </p>
+      </details>
+      
+      <details class="card">
+        <summary style="cursor: pointer; font-weight: 600; font-size: 0.875rem; display: flex; justify-content: space-between; align-items: center;">
+          {$t('contact.faq.questions.areas.question')}
+          <span style="font-size: 1.25rem; color: var(--text-gray);">+</span>
+        </summary>
+        <p style="margin-top: var(--space-3); font-size: 0.875rem; color: var(--text-gray);">
+          {$t('contact.faq.questions.areas.answer')}
+        </p>
+      </details>
+      
+      <details class="card">
+        <summary style="cursor: pointer; font-weight: 600; font-size: 0.875rem; display: flex; justify-content: space-between; align-items: center;">
+          {$t('contact.faq.questions.contractors.question')}
+          <span style="font-size: 1.25rem; color: var(--text-gray);">+</span>
+        </summary>
+        <p style="margin-top: var(--space-3); font-size: 0.875rem; color: var(--text-gray);">
+          {$t('contact.faq.questions.contractors.answer')}
+        </p>
+      </details>
     </div>
-  </section>
-  
-  <!-- Service Area Map Section -->
-  <section class="py-20 bg-neutral-50 dark:bg-neutral-900">
-    <div class="container mx-auto px-4">
-      <div class="max-w-4xl mx-auto">
-        <h2 class="text-center mb-8 animate-on-scroll">Our Service Area</h2>
-        <div bind:this={mapContainer} class="map-container aspect-video bg-neutral-200 dark:bg-neutral-800 rounded-lg 
-                    flex items-center justify-center overflow-hidden shadow-xl">
-          <!-- Replace with actual map integration -->
-          <div class="text-center">
-            <div class="text-6xl mb-4">🗺️</div>
-            <p class="text-neutral-500 dark:text-neutral-400">Interactive Map Coming Soon</p>
-            <p class="text-sm text-neutral-400 dark:text-neutral-500 mt-2">
-              We serve clients across the West Midlands and surrounding areas
-            </p>
-          </div>
-        </div>
-        
-        <!-- Service Areas List -->
-        <div class="mt-12 grid md:grid-cols-3 gap-6">
-          {#each serviceAreas as area}
-            <div class="text-center animate-on-scroll">
-              <h4 class="font-semibold mb-2">{area.name}</h4>
-              <p class="text-neutral-600 dark:text-neutral-300 text-sm">{area.coverage}</p>
-            </div>
-          {/each}
-        </div>
-      </div>
-    </div>
-  </section>
-  
-  <!-- FAQ Section -->
-  <section class="py-20">
-    <div class="container mx-auto px-4">
-      <div class="max-w-3xl mx-auto">
-        <h2 class="text-center mb-12 animate-on-scroll">Frequently Asked Questions</h2>
-        
-        <div class="space-y-6">
-          <details bind:this={faqItems[0]} class="glass-card group">
-            <summary class="cursor-pointer font-semibold text-lg flex items-center justify-between">
-              How long does a typical project take?
-              <span class="text-2xl group-open:rotate-45 transition-transform">+</span>
-            </summary>
-            <p class="mt-4 text-neutral-600 dark:text-neutral-300">
-              Project timelines vary depending on scope and complexity. Most residential projects 
-              take 3-6 months, while commercial projects can range from 6-18 months. We provide 
-              detailed time schedules for all our projects.
-            </p>
-          </details>
-          
-          <details bind:this={faqItems[1]} class="glass-card group">
-            <summary class="cursor-pointer font-semibold text-lg flex items-center justify-between">
-              Do you offer free consultations?
-              <span class="text-2xl group-open:rotate-45 transition-transform">+</span>
-            </summary>
-            <p class="mt-4 text-neutral-600 dark:text-neutral-300">
-              Yes, we offer a free initial consultation to discuss your project requirements 
-              and provide a preliminary assessment. This helps us understand your needs and 
-              provide you with the best possible service.
-            </p>
-          </details>
-          
-          <details bind:this={faqItems[2]} class="glass-card group">
-            <summary class="cursor-pointer font-semibold text-lg flex items-center justify-between">
-              What areas do you serve?
-              <span class="text-2xl group-open:rotate-45 transition-transform">+</span>
-            </summary>
-            <p class="mt-4 text-neutral-600 dark:text-neutral-300">
-              We primarily serve the West Midlands region including Birmingham, Coventry, 
-              Wolverhampton and surrounding areas. We also take on projects throughout the UK 
-              for select clients.
-            </p>
-          </details>
-          
-          <details bind:this={faqItems[3]} class="glass-card group">
-            <summary class="cursor-pointer font-semibold text-lg flex items-center justify-between">
-              What services do you offer for contractors?
-              <span class="text-2xl group-open:rotate-45 transition-transform">+</span>
-            </summary>
-            <p class="mt-4 text-neutral-600 dark:text-neutral-300">
-              We offer a full range of quantity surveying activities, tender preparation, 
-              bill of quantities preparation, time schedules, BIM modeling, financial reports, 
-              and contract handling with legal compliance.
-            </p>
-          </details>
-        </div>
-      </div>
-    </div>
-  </section>
-</div>
+  </div>
+</section>

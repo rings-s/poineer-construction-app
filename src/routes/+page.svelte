@@ -1,115 +1,34 @@
-<!-- src/routes/+page.svelte -->
 <script>
   import Hero from '$lib/components/Hero.svelte';
   import ServiceCard from '$lib/components/ServiceCard.svelte';
-  import AnimatedSection from '$lib/components/AnimatedSection.svelte';
-  import { onMount } from 'svelte';
   import { t } from '$lib/stores/locale.js';
-  import { animations, createScrollObserver, animationPresets } from '$lib/utils/animations.js';
   
-  // Services data from Pioneer Consultants document
   const services = [
     {
-      title: 'BIM Modelling',
-      description: 'Creating and managing the building\'s data throughout its entire lifecycle by allowing architects, engineers, and contractors to work from a shared 3D model.',
-      icon: '🏗️',
+      title: 'services.bim.title',
+      description: 'services.bim.description',
+      icon: `<svg style="width: 2rem; height: 2rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>`,
       link: '/services#bim'
     },
     {
-      title: 'Structural Calculations',
-      description: 'Accurate and compliant structural calculations for new constructions, extensions, and refurbishments.',
-      icon: '📐', 
+      title: 'services.structural.title',
+      description: 'services.structural.description',
+      icon: `<svg style="width: 2rem; height: 2rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>`,
       link: '/services#structural'
     },
     {
-      title: 'Interior Design',
-      description: 'Thoughtfully crafted interiors that balance elegance with everyday liveability.',
-      icon: '🎨',
+      title: 'services.interior.title',
+      description: 'services.interior.description',
+      icon: `<svg style="width: 2rem; height: 2rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zM21 5a2 2 0 00-2-2h-4a2 2 0 00-2 2v12a4 4 0 004 4 4 4 0 004-4V5z"></path></svg>`,
       link: '/services#interior'
     },
     {
-      title: '3D Building Visualisation',
-      description: 'High-quality, immersive 3D renderings that bring designs to life and support confident decision-making.',
-      icon: '🖼️',
+      title: 'services.visualization.title',
+      description: 'services.visualization.description',
+      icon: `<svg style="width: 2rem; height: 2rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>`,
       link: '/services#visualization'
     }
   ];
-  
-  let stats = [
-    { value: 0, target: 150, suffix: '+', label: 'Projects Completed' },
-    { value: 0, target: 25, suffix: '+', label: 'Years Experience' },
-    { value: 0, target: 98, suffix: '%', label: 'Client Satisfaction' },
-    { value: 0, target: 50, suffix: '+', label: 'Expert Team Members' }
-  ];
-  
-  let aboutImageRef;
-  let statsSection;
-  let serviceCards = [];
-  let aboutSection;
-  let ctaSection;
-  
-  onMount(() => {
-    // Initialize animations
-    animations.init();
-    
-    // Setup scroll observer for stats animation
-    const statsObserver = createScrollObserver((target) => {
-      animateStats();
-      statsObserver.unobserve(target);
-    }, { threshold: 0.5 });
-    
-    if (statsSection) {
-      statsObserver.observe(statsSection);
-    }
-    
-    // Setup scroll observer for sections
-    const sectionObserver = createScrollObserver((target) => {
-      target.classList.add('animate-in');
-    });
-    
-    // Observe all sections with animate-on-scroll class
-    document.querySelectorAll('.animate-on-scroll').forEach(el => {
-      sectionObserver.observe(el);
-    });
-    
-    // About image hover effect
-    if (aboutImageRef) {
-      const hoverEffect = animations.hoverScale(aboutImageRef, 1.05);
-      aboutImageRef.addEventListener('mouseenter', hoverEffect.enter);
-      aboutImageRef.addEventListener('mouseleave', hoverEffect.leave);
-    }
-    
-    // Service cards stagger animation
-    if (serviceCards.length > 0) {
-      const cardsObserver = createScrollObserver((target) => {
-        animations.staggerIn(serviceCards, animationPresets.card.stagger);
-        cardsObserver.unobserve(target);
-      });
-      
-      if (serviceCards[0]) {
-        cardsObserver.observe(serviceCards[0].parentElement);
-      }
-    }
-    
-    return () => {
-      statsObserver.disconnect();
-      sectionObserver.disconnect();
-      animations.cleanup();
-    };
-  });
-  
-  function animateStats() {
-    stats.forEach((stat, index) => {
-      const statElement = document.querySelector(`[data-stat="${index}"]`);
-      if (statElement) {
-        animations.animateCounter(statElement, stat.target, {
-          suffix: stat.suffix,
-          delay: index * 0.2,
-          duration: 2
-        });
-      }
-    });
-  }
 </script>
 
 <svelte:head>
@@ -120,103 +39,85 @@
 <Hero />
 
 <!-- About Section -->
-<section bind:this={aboutSection} class="py-20 bg-neutral-50 dark:bg-neutral-900">
-  <div class="container mx-auto px-4">
-    <div class="grid md:grid-cols-2 gap-12 items-center">
-      <div class="animate-on-scroll">
-        <h2 class="mb-6">Who We Are</h2>
-        <p class="text-neutral-600 dark:text-neutral-300 mb-6">
-          Pioneer Consultants combines creative vision with viability. We provide comprehensive technical support throughout every stage of your project, from initial concept through to closure.
+<section class="section" style="background: var(--bg-gray);">
+  <div class="container-wide">
+    <div class="grid-2" style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-12); align-items: center;">
+      <div>
+        <h2 style="margin-bottom: var(--space-4);">{$t('about.title')}</h2>
+        <p style="font-size: 1rem; margin-bottom: var(--space-4); color: var(--text-gray);">
+          {$t('about.description1')}
         </p>
-        <p class="text-neutral-600 dark:text-neutral-300 mb-8">
-          Our team combines professional design expertise with a commitment to delivering practical, inspiring solutions for every client across the West Midlands and surrounding areas.
+        <p style="font-size: 1rem; margin-bottom: var(--space-6); color: var(--text-gray);">
+          {$t('about.description2')}
         </p>
-        <a href="/about" class="btn-primary inline-block">
-          Learn More About Us
+        <a href="/about" class="btn-primary">
+          {$t('about.cta')}
         </a>
       </div>
       
-      <div class="relative animate-on-scroll">
-        <div class="glass-card p-0 overflow-hidden">
-          <div bind:this={aboutImageRef} 
-               class="aspect-video bg-gradient-to-br from-primary-400 to-accent-400 rounded-lg 
-                      flex items-center justify-center text-white text-4xl font-bold transition-transform duration-300">
-            PCL
-          </div>
-        </div>
-        <div class="absolute -bottom-6 -right-6 w-32 h-32 bg-accent-400 rounded-lg opacity-20 -z-10"></div>
-        <div class="absolute -top-6 -left-6 w-24 h-24 bg-primary-400 rounded-full opacity-10 -z-10"></div>
+      <div style="display: flex; align-items: center; justify-content: center; min-height: 16rem; background: var(--text-dark); color: var(--text-light); border-radius: var(--space-2); font-size: 3rem; font-weight: 700;">
+        PCL
       </div>
     </div>
   </div>
 </section>
 
 <!-- Services Section -->
-<section class="py-20">
-  <div class="container mx-auto px-4">
-    <div class="text-center mb-12 animate-on-scroll">
-      <h2 class="mb-4">Our Services</h2>
-      <p class="text-xl text-neutral-600 dark:text-neutral-300 max-w-2xl mx-auto">
-        Comprehensive project management, cost control & design support with extensive expertise tailored to contractors, consultants, and clients.
+<section class="section">
+  <div class="container-wide">
+    <div style="text-align: center; margin-bottom: var(--space-12);">
+      <h2 style="margin-bottom: var(--space-4);">{$t('services.title')}</h2>
+      <p style="font-size: 1rem; max-width: 35rem; margin: 0 auto; color: var(--text-gray);">
+        {$t('services.subtitle')}
       </p>
     </div>
     
-    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-      {#each services as service, i}
-        <div bind:this={serviceCards[i]} class="animate-on-scroll">
-          <ServiceCard {...service} />
-        </div>
+    <div class="grid-4" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: var(--space-5);">
+      {#each services as service}
+        <ServiceCard {...service} />
       {/each}
     </div>
   </div>
 </section>
 
-<!-- Stats Section -->
-<section bind:this={statsSection} class="py-20 gradient-bg text-white relative overflow-hidden">
-  <!-- Animated background shapes -->
-  <div class="absolute inset-0 opacity-10">
-    <div class="absolute top-10 left-10 w-40 h-40 bg-white rounded-full animate-pulse-slow"></div>
-    <div class="absolute bottom-10 right-10 w-60 h-60 bg-white rounded-full animate-pulse-slow animation-delay-200"></div>
-  </div>
-  
-  <div class="container mx-auto px-4 relative z-10">
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
-      {#each stats as stat, index}
-        <div class="text-center">
-          <div class="text-4xl md:text-5xl font-bold mb-2" data-stat={index}>
-            0{stat.suffix}
-          </div>
-          <div class="text-lg opacity-90">{stat.label}</div>
-        </div>
-      {/each}
-    </div>
-  </div>
-</section>
+
 
 <!-- Sectors Section -->
-<section class="py-20 bg-neutral-50 dark:bg-neutral-900">
-  <div class="container mx-auto px-4">
-    <div class="text-center mb-12">
-      <h2 class="mb-4 animate-on-scroll">Sectors We Work In</h2>
-      <p class="text-xl text-neutral-600 dark:text-neutral-300 animate-on-scroll">
-        Delivering excellence across multiple construction sectors
+<section class="section" style="background: var(--bg-gray);">
+  <div class="container-wide">
+    <div style="text-align: center; margin-bottom: var(--space-12);">
+      <h2 style="margin-bottom: var(--space-4);">{$t('services.sectors.title')}</h2>
+      <p style="font-size: 1rem; max-width: 35rem; margin: 0 auto; color: var(--text-gray);">
+        {$t('services.sectors.subtitle')}
       </p>
     </div>
     
-    <div class="grid md:grid-cols-2 gap-8 max-w-2xl mx-auto">
-      <div class="text-center p-8 neumorphic-card animate-on-scroll hover:scale-105 transition-transform duration-300">
-        <div class="text-6xl mb-4">🏗️</div>
-        <h3 class="text-2xl font-bold">Infrastructure</h3>
-        <p class="text-neutral-600 dark:text-neutral-300 mt-2">
-          Roads, bridges, utilities, and public works projects
+    <div class="grid-2" style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-8); max-width: 50rem; margin: 0 auto;">
+      <div class="card" style="text-align: center;">
+        <div style="width: 4rem; height: 4rem; background: var(--text-dark); margin: 0 auto var(--space-4); border-radius: var(--space-2); display: flex; align-items: center; justify-content: center;">
+          <svg style="width: 2rem; height: 2rem; color: var(--text-light);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path>
+          </svg>
+        </div>
+        <h3 style="margin-bottom: var(--space-3);">
+          {$t('services.sectors.infrastructure.title')}
+        </h3>
+        <p style="color: var(--text-gray);">
+          {$t('services.sectors.infrastructure.description')}
         </p>
       </div>
       
-      <div class="text-center p-8 neumorphic-card animate-on-scroll hover:scale-105 transition-transform duration-300">
-        <div class="text-6xl mb-4">🏢</div>
-        <h3 class="text-2xl font-bold">Construction</h3>
-        <p class="text-neutral-600 dark:text-neutral-300 mt-2">
-          Commercial, residential, and industrial buildings
+      <div class="card" style="text-align: center;">
+        <div style="width: 4rem; height: 4rem; background: var(--text-dark); margin: 0 auto var(--space-4); border-radius: var(--space-2); display: flex; align-items: center; justify-content: center;">
+          <svg style="width: 2rem; height: 2rem; color: var(--text-light);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+          </svg>
+        </div>
+        <h3 style="margin-bottom: var(--space-3);">
+          {$t('services.sectors.construction.title')}
+        </h3>
+        <p style="color: var(--text-gray);">
+          {$t('services.sectors.construction.description')}
         </p>
       </div>
     </div>
@@ -224,18 +125,16 @@
 </section>
 
 <!-- CTA Section -->
-<section bind:this={ctaSection} class="py-20">
-  <div class="container mx-auto px-4">
-    <div class="max-w-3xl mx-auto text-center">
-      <div class="glass-card animate-on-scroll">
-        <h2 class="mb-6">Ready to Start Your Project?</h2>
-        <p class="text-xl text-neutral-600 dark:text-neutral-300 mb-8">
-          Let's transform your vision into reality together. Our expert team is ready to help you create something extraordinary.
-        </p>
-        <a href="/contact" class="btn-primary inline-block">
-          Get in Touch
-        </a>
-      </div>
+<section class="section">
+  <div class="container">
+    <div style="text-align: center;">
+      <h2 style="margin-bottom: var(--space-4);">{$t('cta.title')}</h2>
+      <p style="font-size: 1rem; margin-bottom: var(--space-6); color: var(--text-gray);">
+        {$t('cta.subtitle')}
+      </p>
+      <a href="/contact" class="btn-primary">
+        {$t('cta.button')}
+      </a>
     </div>
   </div>
 </section>

@@ -1,94 +1,36 @@
-<!-- src/routes/about/+page.svelte -->
 <script>
-  import { onMount } from 'svelte';
   import { t } from '$lib/stores/locale.js';
-  import AnimatedSection from '$lib/components/AnimatedSection.svelte';
-  import { animations, createScrollObserver, animationPresets } from '$lib/utils/animations.js';
-  
-  let timelineRef;
-  let heroSection;
-  let visionMissionCards = [];
-  let valueCards = [];
-  let timelineItems = [];
-  
-  onMount(() => {
-    animations.init();
-    
-    // Hero section animation
-    if (heroSection) {
-      animations.fadeIn(heroSection, animationPresets.hero.title);
-    }
-    
-    // Vision & Mission cards stagger
-    if (visionMissionCards.length > 0) {
-      animations.staggerIn(visionMissionCards, animationPresets.card.stagger);
-    }
-    
-    // Values cards stagger
-    if (valueCards.length > 0) {
-      const valuesObserver = createScrollObserver((target) => {
-        animations.staggerIn(valueCards, { ...animationPresets.card.stagger, delay: 0.2 });
-        valuesObserver.unobserve(target);
-      });
-      
-      if (valueCards[0]) {
-        valuesObserver.observe(valueCards[0].parentElement);
-      }
-    }
-    
-    // Timeline animation
-    if (timelineItems.length > 0) {
-      const timelineObserver = createScrollObserver((target) => {
-        // Animate timeline line
-        const timelineLine = document.querySelector('.timeline-line');
-        if (timelineLine) {
-          animations.fadeIn(timelineLine, { duration: 2, delay: 0.3 });
-        }
-        
-        // Animate timeline items
-        animations.staggerIn(timelineItems, { 
-          duration: 0.8, 
-          stagger: 0.2, 
-          delay: 0.5,
-          x: -50
-        });
-        
-        timelineObserver.unobserve(target);
-      });
-      
-      if (timelineRef) {
-        timelineObserver.observe(timelineRef);
-      }
-    }
-    
-    // Setup scroll observer for other sections
-    const sectionObserver = createScrollObserver((target) => {
-      target.classList.add('animate-in');
-    });
-    
-    document.querySelectorAll('.animate-on-scroll').forEach(el => {
-      sectionObserver.observe(el);
-    });
-    
-    return () => {
-      animations.cleanup();
-    };
-  });
   
   const milestones = [
-    { year: '1998', title: 'Company Founded', description: 'Started with a vision to transform construction consultancy in the West Midlands' },
-    { year: '2005', title: 'First Major Project', description: 'Completed our first million-pound infrastructure project' },
-    { year: '2010', title: 'Regional Expansion', description: 'Expanded operations to serve clients across the West Midlands and surrounding areas' },
-    { year: '2015', title: 'BIM Innovation', description: 'Pioneered BIM modeling services in the region' },
-    { year: '2020', title: 'Digital Transformation', description: 'Launched cutting-edge 3D visualization and web design services' },
-    { year: '2024', title: 'Industry Leader', description: 'Recognized as a leading construction consultancy firm' }
+    { year: '1998', title: 'about.journey.milestone1.title', description: 'about.journey.milestone1.description' },
+    { year: '2005', title: 'about.journey.milestone2.title', description: 'about.journey.milestone2.description' },
+    { year: '2010', title: 'about.journey.milestone3.title', description: 'about.journey.milestone3.description' },
+    { year: '2015', title: 'about.journey.milestone4.title', description: 'about.journey.milestone4.description' },
+    { year: '2020', title: 'about.journey.milestone5.title', description: 'about.journey.milestone5.description' },
+    { year: '2024', title: 'about.journey.milestone6.title', description: 'about.journey.milestone6.description' }
   ];
   
   const values = [
-    { icon: '🎯', title: 'Excellence', description: 'Committed to delivering the highest quality in every project' },
-    { icon: '🤝', title: 'Integrity', description: 'Building trust through transparency and ethical practices' },
-    { icon: '💡', title: 'Innovation', description: 'Embracing new technologies to create better solutions' },
-    { icon: '🌱', title: 'Sustainability', description: 'Designing for a greener, more sustainable future' }
+    { 
+      icon: `<svg style="width: 1.5rem; height: 1.5rem;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>`, 
+      title: 'about.values.excellence.title', 
+      description: 'about.values.excellence.description' 
+    },
+    { 
+      icon: `<svg style="width: 1.5rem; height: 1.5rem;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>`, 
+      title: 'about.values.integrity.title', 
+      description: 'about.values.integrity.description' 
+    },
+    { 
+      icon: `<svg style="width: 1.5rem; height: 1.5rem;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>`, 
+      title: 'about.values.innovation.title', 
+      description: 'about.values.innovation.description' 
+    },
+    { 
+      icon: `<svg style="width: 1.5rem; height: 1.5rem;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>`, 
+      title: 'about.values.sustainability.title', 
+      description: 'about.values.sustainability.description' 
+    }
   ];
 </script>
 
@@ -97,112 +39,94 @@
   <meta name="description" content="Learn about Pioneer Consultants Limited - combining creative vision with viability in construction consultancy across the West Midlands." />
 </svelte:head>
 
-<div class="min-h-screen">
-  <!-- Hero Section -->
-  <section bind:this={heroSection} class="relative py-20 bg-gradient-to-br from-primary-50 to-accent-50 dark:from-neutral-900 dark:to-neutral-800">
-    <div class="container mx-auto px-4">
-      <div class="max-w-3xl mx-auto text-center">
-        <h1 class="mb-6">Who We Are</h1>
-        <p class="text-xl text-neutral-600 dark:text-neutral-300">
-          Pioneer Consultants combines creative vision with viability. We provide comprehensive technical support throughout every stage of your project, from initial concept through to closure.
-        </p>
-      </div>
+<!-- Hero Section -->
+<section class="section">
+  <div class="container">
+    <div style="text-align: center;">
+      <h1 style="font-size: 2.5rem; margin-bottom: var(--space-4);">{$t('about.title')}</h1>
+      <p style="font-size: 1rem; color: var(--text-gray); max-width: 35rem; margin: 0 auto;">
+        {$t('about.subtitle')}
+      </p>
     </div>
-  </section>
-  
-  <!-- Vision & Mission -->
-  <section class="py-20">
-    <div class="container mx-auto px-4">
-      <div class="grid md:grid-cols-2 gap-12">
-        <div bind:this={visionMissionCards[0]} class="glass-card">
-          <div class="text-4xl mb-4">🔭</div>
-          <h2 class="text-3xl font-bold mb-4">Our Vision</h2>
-          <p class="text-neutral-600 dark:text-neutral-300">
-            To be the most trusted and innovative construction consultancy firm in the West Midlands and beyond, 
-            setting new standards in design excellence and project delivery.
-          </p>
+  </div>
+</section>
+
+<!-- Vision & Mission -->
+<section class="section" style="background: var(--bg-gray);">
+  <div class="container-wide">
+    <div class="grid-2" style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-12);">
+      <div class="card">
+        <div style="color: var(--text-dark); margin-bottom: var(--space-4);">
+          <svg style="width: 3rem; height: 3rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+          </svg>
         </div>
-        
-        <div bind:this={visionMissionCards[1]} class="glass-card">
-          <div class="text-4xl mb-4">🎯</div>
-          <h2 class="text-3xl font-bold mb-4">Our Mission</h2>
-          <p class="text-neutral-600 dark:text-neutral-300">
-            Our team combines professional design expertise with a commitment to delivering practical, 
-            inspiring solutions for every client. We specialize in creating innovative, sustainable structures 
-            tailored to your needs.
-          </p>
-        </div>
-      </div>
-    </div>
-  </section>
-  
-  <!-- Core Values -->
-  <section class="py-20 bg-neutral-50 dark:bg-neutral-900">
-    <div class="container mx-auto px-4">
-      <h2 class="text-center mb-12 animate-on-scroll">Our Core Values</h2>
-      
-      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-        {#each values as value, i}
-          <div bind:this={valueCards[i]} class="text-center">
-            <div class="text-5xl mb-4">{value.icon}</div>
-            <h3 class="text-xl font-bold mb-2">{value.title}</h3>
-            <p class="text-neutral-600 dark:text-neutral-300">{value.description}</p>
-          </div>
-        {/each}
-      </div>
-    </div>
-  </section>
-  
-  <!-- Timeline -->
-  <section class="py-20">
-    <div class="container mx-auto px-4">
-      <h2 class="text-center mb-12 animate-on-scroll">Our Journey</h2>
-      
-      <div bind:this={timelineRef} class="max-w-4xl mx-auto relative">
-        <!-- Timeline line -->
-        <div class="timeline-line absolute left-1/2 transform -translate-x-1/2 w-1 bg-primary-200 dark:bg-primary-800 top-0 bottom-0 opacity-0"></div>
-        
-        {#each milestones as milestone, i}
-          <div bind:this={timelineItems[i]} class="timeline-item flex items-start mb-12 {i % 2 === 0 ? 'flex-row' : 'flex-row-reverse'} opacity-0">
-            <div class="flex-1 {i % 2 === 0 ? 'text-right pr-8' : 'text-left pl-8'}">
-              <h3 class="text-2xl font-bold text-primary-600 mb-2">{milestone.year}</h3>
-              <h4 class="text-xl font-semibold mb-2">{milestone.title}</h4>
-              <p class="text-neutral-600 dark:text-neutral-300">{milestone.description}</p>
-            </div>
-            
-            <div class="relative z-10">
-              <div class="w-4 h-4 bg-primary-600 rounded-full ring-4 ring-white dark:ring-neutral-900"></div>
-            </div>
-            
-            <div class="flex-1"></div>
-          </div>
-        {/each}
-      </div>
-    </div>
-  </section>
-  
-  <!-- Team Section -->
-  <section class="py-20 bg-neutral-50 dark:bg-neutral-900">
-    <div class="container mx-auto px-4">
-      <div class="text-center mb-12">
-        <h2 class="mb-4 animate-on-scroll">Our Expert Team</h2>
-        <p class="text-xl text-neutral-600 dark:text-neutral-300 max-w-2xl mx-auto animate-on-scroll">
-          A dedicated team of professionals committed to excellence in every project across the West Midlands
+        <h2 style="margin-bottom: var(--space-4);">{$t('about.vision.title')}</h2>
+        <p style="font-size: 1rem; color: var(--text-gray);">
+          {$t('about.vision.description')}
         </p>
       </div>
       
-      <div class="grid md:grid-cols-4 gap-8">
-        {#each Array(4) as _, i}
-          <div class="text-center animate-on-scroll" style="animation-delay: {i * 100}ms">
-            <div class="w-32 h-32 mx-auto mb-4 bg-gradient-to-br from-primary-400 to-accent-400 rounded-full
-                        flex items-center justify-center text-white text-3xl font-bold">
-              T{i + 1}
-            </div>
-            <h4 class="font-semibold">Expert Team Member</h4>
-            <p class="text-neutral-600 dark:text-neutral-300">Specialist</p>
-          </div>
-        {/each}
+      <div class="card">
+        <div style="color: var(--text-dark); margin-bottom: var(--space-4);">
+          <svg style="width: 3rem; height: 3rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+        </div>
+        <h2 style="margin-bottom: var(--space-4);">{$t('about.mission.title')}</h2>
+        <p style="font-size: 1rem; color: var(--text-gray);">
+          {$t('about.mission.description')}
+        </p>
       </div>
     </div>
-  </section>
-</div>
+  </div>
+</section>
+
+<!-- Core Values -->
+<section class="section">
+  <div class="container-wide">
+    <div style="text-align: center; margin-bottom: var(--space-12);">
+      <h2 style="margin-bottom: var(--space-4);">{$t('about.values.title')}</h2>
+    </div>
+    
+    <div class="grid-2" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr)); gap: var(--space-10);">
+      {#each values as value}
+        <div class="value-item" style="display: flex; align-items: flex-start; gap: var(--space-4); text-align: left; padding: var(--space-6); border-radius: var(--space-2); transition: all 0.2s ease;">
+          <!-- Icon aligned left for LTR, right for RTL -->
+          <div style="flex-shrink: 0; color: var(--text-dark); margin-top: var(--space-1); opacity: 0.8;">
+            {@html value.icon}
+          </div>
+          
+          <!-- Content -->
+          <div style="flex: 1;">
+            <h3 style="margin-bottom: var(--space-3); font-size: 1rem; font-weight: 600; line-height: 1.4; color: var(--text-dark);">
+              {$t(value.title)}
+            </h3>
+            <p style="font-size: 0.875rem; line-height: 1.6; color: var(--text-gray); margin: 0;">
+              {$t(value.description)}
+            </p>
+          </div>
+        </div>
+      {/each}
+    </div>
+  </div>
+</section>
+
+
+
+
+<!-- CTA Section -->
+<section class="section" style="background: var(--text-dark); color: var(--text-light);">
+  <div class="container">
+    <div style="text-align: center;">
+      <h2 style="margin-bottom: var(--space-4); color: var(--text-light);">Ready to work with us?</h2>
+      <p style="font-size: 1rem; margin-bottom: var(--space-6); color: var(--text-gray);">
+        Let's discuss your next construction project and bring your vision to reality.
+      </p>
+      <a href="/contact" class="btn-primary" style="background: var(--text-light); color: var(--text-dark);">
+        Get in Touch
+      </a>
+    </div>
+  </div>
+</section>

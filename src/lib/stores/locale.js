@@ -94,11 +94,37 @@ const translations = {
       },
       journey: {
         title: 'Our Journey',
-        subtitle: 'Over 25 years of excellence in construction consultancy'
+        subtitle: 'Over 25 years of excellence in construction consultancy',
+        milestone1: {
+          title: 'Company Founded',
+          description: 'Pioneer Consultants was established with a vision to bring innovation to construction consultancy in the West Midlands.'
+        },
+        milestone2: {
+          title: 'First Major Project',
+          description: 'Successfully completed our first major commercial project, establishing our reputation for quality and reliability.'
+        },
+        milestone3: {
+          title: 'BIM Integration',
+          description: 'Became early adopters of BIM technology, revolutionizing our design and project management processes.'
+        },
+        milestone4: {
+          title: 'Team Expansion',
+          description: 'Expanded our team of specialists to cover all aspects of construction consultancy and design services.'
+        },
+        milestone5: {
+          title: 'Digital Innovation',
+          description: 'Launched our digital visualization services, offering clients immersive 3D experiences of their projects.'
+        },
+        milestone6: {
+          title: 'Leading Excellence',
+          description: 'Today, we continue to lead the industry with innovative solutions and exceptional service delivery.'
+        }
       },
       team: {
         title: 'Our Expert Team',
-        subtitle: 'A dedicated team of professionals committed to excellence in every project across the West Midlands'
+        subtitle: 'A dedicated team of professionals committed to excellence in every project across the West Midlands',
+        memberTitle: 'Team Member',
+        memberRole: 'Expert Professional'
       }
     },
     services: {
@@ -215,7 +241,10 @@ const translations = {
         steps: {
           contact: 'Contact Info',
           project: 'Project Details',
-          review: 'Review & Submit'
+          review: 'Review & Submit',
+          contactSubtitle: 'Tell us about yourself',
+          projectSubtitle: 'Describe your project',
+          reviewSubtitle: 'Confirm your information'
         },
         fields: {
           name: {
@@ -340,7 +369,12 @@ const translations = {
       delete: 'Delete',
       confirm: 'Confirm',
       yes: 'Yes',
-      no: 'No'
+      no: 'No',
+      darkMode: 'Switch to dark mode',
+      lightMode: 'Switch to light mode',
+      changeLanguage: 'Change language',
+      theme: 'Theme',
+      language: 'Language'
     }
   },
   ar: {
@@ -395,11 +429,37 @@ const translations = {
       },
       journey: {
         title: 'رحلتنا',
-        subtitle: 'أكثر من 25 عامًا من التميز في الاستشارات الإنشائية'
+        subtitle: 'أكثر من 25 عامًا من التميز في الاستشارات الإنشائية',
+        milestone1: {
+          title: 'تأسيس الشركة',
+          description: 'تأسست شركة بايونير للاستشارات برؤية لجلب الابتكار إلى استشارات البناء في ويست ميدلاندز.'
+        },
+        milestone2: {
+          title: 'أول مشروع كبير',
+          description: 'أكملنا بنجاح أول مشروع تجاري كبير لنا، مما رسخ سمعتنا في الجودة والموثوقية.'
+        },
+        milestone3: {
+          title: 'دمج تقنية BIM',
+          description: 'أصبحنا من أوائل المتبنين لتقنية نمذجة معلومات البناء، مما أحدث ثورة في عمليات التصميم وإدارة المشاريع لدينا.'
+        },
+        milestone4: {
+          title: 'توسيع الفريق',
+          description: 'وسعنا فريق المتخصصين لدينا لتغطية جميع جوانب الاستشارات الإنشائية وخدمات التصميم.'
+        },
+        milestone5: {
+          title: 'الابتكار الرقمي',
+          description: 'أطلقنا خدمات التصور الرقمي، مما يوفر للعملاء تجارب ثلاثية الأبعاد غامرة لمشاريعهم.'
+        },
+        milestone6: {
+          title: 'قيادة التميز',
+          description: 'اليوم، نواصل قيادة الصناعة بحلول مبتكرة وتقديم خدمات استثنائية.'
+        }
       },
       team: {
         title: 'فريق الخبراء لدينا',
-        subtitle: 'فريق متخصص من المهنيين ملتزم بالتميز في كل مشروع عبر ويست ميدلاندز'
+        subtitle: 'فريق متخصص من المهنيين ملتزم بالتميز في كل مشروع عبر ويست ميدلاندز',
+        memberTitle: 'عضو الفريق',
+        memberRole: 'محترف خبير'
       }
     },
     services: {
@@ -516,7 +576,10 @@ const translations = {
         steps: {
           contact: 'معلومات الاتصال',
           project: 'تفاصيل المشروع',
-          review: 'المراجعة والإرسال'
+          review: 'المراجعة والإرسال',
+          contactSubtitle: 'أخبرنا عن نفسك',
+          projectSubtitle: 'صف مشروعك',
+          reviewSubtitle: 'تأكد من معلوماتك'
         },
         fields: {
           name: {
@@ -641,7 +704,12 @@ const translations = {
       delete: 'حذف',
       confirm: 'تأكيد',
       yes: 'نعم',
-      no: 'لا'
+      no: 'لا',
+      darkMode: 'التبديل إلى الوضع المظلم',
+      lightMode: 'التبديل إلى الوضع المضيء',
+      changeLanguage: 'تغيير اللغة',
+      theme: 'المظهر',
+      language: 'اللغة'
     }
   }
 };
