@@ -4,33 +4,35 @@
   export let title = '';
   export let description = '';
   export let icon = '';
-  export let link = '';
+  export let delay = 0;
 </script>
 
-<a href={link} class="service-card" style="text-decoration: none; color: inherit; display: block; height: 100%; background: var(--bg-light); border-radius: var(--space-3); padding: var(--space-5); box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); border: 1px solid rgba(0, 0, 0, 0.04); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); position: relative; overflow: hidden;">
-  <div style="height: 100%; display: flex; flex-direction: column; justify-content: center; text-align: left; position: relative; z-index: 2; min-height: 16rem;">
-    <!-- Icon without background -->
-    <div style="color: var(--text-dark); margin-bottom: var(--space-4); flex-shrink: 0; opacity: 0.8; transition: all 0.3s ease;">
-      {@html icon}
-    </div>
-    
-    <!-- Title with improved typography -->
-    <h3 style="margin-bottom: var(--space-3); flex-shrink: 0; font-size: 1.125rem; font-weight: 600; line-height: 1.3; color: var(--text-dark);">
-      {$t(title)}
-    </h3>
-    
-    <!-- Description with better spacing -->
-    <p style="margin-bottom: var(--space-3); flex-grow: 1; color: var(--text-gray); font-size: 0.875rem; line-height: 1.5; opacity: 0.9;">
-      {$t(description)}
-    </p>
-    
-    <!-- Enhanced CTA with arrow animation -->
-    <div style="font-size: 0.8125rem; font-weight: 500; color: var(--text-dark); display: flex; align-items: center; gap: var(--space-2); margin-top: auto;">
-      {$t('services.learnMore')}
-      <span style="font-size: 0.875rem; transition: transform 0.2s ease; display: inline-block;">→</span>
-    </div>
+<div class="group relative bg-white dark:bg-gray-800 rounded-xl border border-gray-200/50 dark:border-gray-700/50 p-6 hover:shadow-lg dark:hover:shadow-gray-900/20 hover:-translate-y-1 transition-all duration-300 transform-gpu animate-fade-in-up"
+     style="animation-delay: {delay}ms;">
+  
+  <!-- Icon -->
+  <div class="mb-4 text-gray-700 dark:text-gray-300 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors duration-300">
+    {@html icon}
   </div>
   
-  <!-- Subtle gradient overlay on hover -->
-  <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(135deg, rgba(0, 0, 0, 0.02) 0%, rgba(0, 0, 0, 0.01) 100%); opacity: 0; transition: opacity 0.3s ease; z-index: 1;"></div>
-</a>
+  <!-- Title -->
+  <h3 class="text-sm font-bold text-black dark:text-white mb-3 leading-tight" class:font-arabic={title.includes('ar.')}>
+    {$t(title)}
+  </h3>
+  
+  <!-- Description -->
+  <p class="text-xs text-gray-600 dark:text-gray-400 leading-relaxed mb-4" class:font-arabic={description.includes('ar.')}>
+    {$t(description)}
+  </p>
+  
+  <!-- Learn More Link -->
+  <div class="flex items-center text-xs font-medium text-purple-600 dark:text-purple-400 group-hover:text-purple-700 dark:group-hover:text-purple-300 transition-colors duration-300">
+    <span class:font-arabic={$t('services.learnMore').length > 10}>{$t('services.learnMore')}</span>
+    <svg class="w-3 h-3 ml-1 group-hover:translate-x-0.5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+    </svg>
+  </div>
+  
+  <!-- Hover Effect -->
+  <div class="absolute inset-0 bg-gradient-to-br from-purple-50/50 to-blue-50/50 dark:from-purple-900/10 dark:to-blue-900/10 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+</div>
