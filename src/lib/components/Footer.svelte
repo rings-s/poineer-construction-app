@@ -1,164 +1,381 @@
 <!-- src/lib/components/Footer.svelte -->
 <script>
-  import { t } from '$lib/stores/locale.js';
-    
-  const currentYear = new Date().getFullYear();
+  import { onMount } from 'svelte';
+  import { locale, t } from '$lib/stores/locale.js';
   
-  const footerLinks = {
-    company: [
-      { label: 'footer.links.about', href: '/about' },
-      { label: 'footer.links.services', href: '/services' },
-      { label: 'footer.links.contact', href: '/contact' }
-    ],
-    services: [
-      { label: 'services.bim.title', href: '/services#bim' },
-      { label: 'services.structural.title', href: '/services#structural' },
-      { label: 'services.interior.title', href: '/services#interior' },
-      { label: 'services.visualization.title', href: '/services#visualization' }
-    ],
-    legal: [
-      { label: 'footer.links.privacy', href: '/privacy' },
-      { label: 'footer.links.terms', href: '/terms' },
-      { label: 'footer.links.sitemap', href: '/sitemap' }
-    ]
+  let mounted = false;
+  let currentYear = new Date().getFullYear();
+  
+  // Footer sections data
+  const footerSections = {
+    company: {
+      title: 'footer.company',
+      links: [
+        { key: 'footer.links.about', href: '/about' },
+        { key: 'nav.services', href: '/services' },
+        { key: 'footer.links.contact', href: '/contact' }
+      ]
+    },
+    services: {
+      title: 'footer.services',
+      links: [
+        { key: 'services.projectTypes.bim', href: '/services#bim' },
+        { key: 'services.projectTypes.structural', href: '/services#structural' },
+        { key: 'services.projectTypes.interior', href: '/services#interior' },
+        { key: 'services.projectTypes.visualization', href: '/services#visualization' }
+      ]
+    },
+    legal: {
+      title: 'footer.legal',
+      links: [
+        { key: 'footer.links.privacy', href: '/privacy' },
+        { key: 'footer.links.terms', href: '/terms' },
+        { key: 'footer.links.sitemap', href: '/sitemap' }
+      ]
+    }
   };
-  
+
+  // Social media links
   const socialLinks = [
-    { 
-      label: 'LinkedIn', 
-      icon: `<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.338 16.338H13.67V12.16c0-.995-.017-2.277-1.387-2.277-1.39 0-1.601 1.086-1.601 2.207v4.248H8.014v-8.59h2.559v1.174h.037c.356-.675 1.227-1.387 2.526-1.387 2.703 0 3.203 1.778 3.203 4.092v4.711zM5.005 6.575a1.548 1.548 0 11-.003-3.096 1.548 1.548 0 01.003 3.096zm-1.337 9.763H6.34v-8.59H3.667v8.59zM17.668 1H2.328C1.595 1 1 1.581 1 2.298v15.403C1 18.418 1.595 19 2.328 19h15.34c.734 0 1.332-.582 1.332-1.299V2.298C19 1.581 18.402 1 17.668 1z" clip-rule="evenodd"/></svg>`, 
-      href: '#' 
+    {
+      name: 'LinkedIn',
+      href: '#',
+      icon: 'M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z'
     },
-    { 
-      label: 'Instagram', 
-      icon: `<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 0C7.284 0 6.944.012 5.877.06 2.246.227.227 2.242.06 5.877.012 6.944 0 7.284 0 10s.012 3.056.06 4.123c.167 3.632 2.182 5.65 5.817 5.817C6.944 19.988 7.284 20 10 20s3.056-.012 4.123-.06c3.629-.167 5.652-2.182 5.817-5.817C19.988 13.056 20 12.716 20 10s-.012-3.056-.06-4.123C19.833 2.245 17.815.227 14.183.06 13.056.012 12.716 0 10 0zm0 1.802c2.67 0 2.987.01 4.042.059 2.71.123 3.975 1.409 4.099 4.099.048 1.054.057 1.37.057 4.04 0 2.672-.01 2.988-.057 4.042-.124 2.687-1.387 3.975-4.1 4.099-1.054.048-1.37.058-4.041.058-2.67 0-2.987-.01-4.04-.058-2.717-.124-3.977-1.416-4.1-4.1-.048-1.054-.058-1.37-.058-4.041 0-2.67.01-2.986.058-4.04.124-2.69 1.387-3.977 4.1-4.1 1.054-.048 1.37-.058 4.04-.058zM10 4.865a5.135 5.135 0 100 10.27 5.135 5.135 0 000-10.27zm0 8.468a3.333 3.333 0 110-6.666 3.333 3.333 0 010 6.666zm5.338-9.87a1.2 1.2 0 100 2.4 1.2 1.2 0 000-2.4z" clip-rule="evenodd"/></svg>`, 
-      href: '#' 
+    {
+      name: 'Twitter',
+      href: '#',
+      icon: 'M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z'
     },
-    { 
-      label: 'Twitter', 
-      icon: `<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M6.29 18.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0020 3.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.073 4.073 0 01.8 7.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 010 16.407a11.616 11.616 0 006.29 1.84"/>`, 
-      href: '#' 
+    {
+      name: 'Facebook',
+      href: '#',
+      icon: 'M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z'
+    },
+    {
+      name: 'Instagram',
+      href: '#',
+      icon: 'M12.017 0C5.396 0 .029 5.367.029 11.987c0 6.62 5.367 11.987 11.988 11.987 6.62 0 11.987-5.367 11.987-11.987C24.014 5.367 18.637.001 12.017.001zM12 16.624c-2.563 0-4.625-2.062-4.625-4.624C7.375 9.437 9.437 7.376 12 7.376s4.625 2.061 4.625 4.624C16.625 14.562 14.563 16.624 12 16.624zM17.965 6.584c-.6 0-1.086-.486-1.086-1.086s.486-1.085 1.086-1.085 1.085.485 1.085 1.085-.485 1.086-1.085 1.086z'
     }
   ];
+
+  // Contact information
+  const contactInfo = {
+    email: 'info@pioneerconsultants.com',
+    phone: '+44 (0) 123 456 7890',
+    address: 'West Midlands, United Kingdom'
+  };
+
+  onMount(() => {
+    mounted = true;
+    locale.init();
+  });
 </script>
+
+<!-- Footer Container -->
+<footer class="relative bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white overflow-hidden">
   
-<footer class="bg-gradient-to-br from-neutral-900 via-neutral-800 to-neutral-900 text-white">
-  <div class="container-wide">
-    <!-- Main Footer Content -->
-    <div class="py-16">
-      <div class="grid-2 lg:grid-cols-4 gap-8">
-        <!-- Company Info -->
-        <div class="lg:col-span-2">
-          <div class="mb-6">
-            <h3 class="text-heading-2 font-black bg-gradient-to-r from-primary-400 to-accent-400 bg-clip-text text-transparent mb-4">
-              Pioneer Consultants
-            </h3>
-            <p class="text-body text-neutral-300 leading-relaxed max-w-md">
-              {$t('footer.description')}
-            </p>
+  <!-- Background Pattern -->
+  <div class="absolute inset-0 opacity-5">
+    <div class="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-blue-500/10"></div>
+    <svg class="absolute inset-0 w-full h-full" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <pattern id="footer-pattern" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+          <circle cx="20" cy="20" r="1" fill="currentColor" opacity="0.3"/>
+        </pattern>
+      </defs>
+      <rect width="100%" height="100%" fill="url(#footer-pattern)"/>
+    </svg>
+  </div>
+
+  <!-- Main Footer Content -->
+  <div class="relative z-10">
+    
+    <!-- Top Section -->
+    <div class="px-4 sm:px-6 lg:px-8 pt-16 pb-12">
+      <div class="max-w-7xl mx-auto">
+        
+        <!-- Brand Section -->
+        <div class="text-center mb-16">
+          <div class="flex items-center justify-center space-x-4 mb-6" class:space-x-reverse={$locale === 'ar'}>
+            <div class="w-16 h-16 bg-gradient-to-br from-purple-500 to-blue-600 rounded-2xl flex items-center justify-center shadow-xl shadow-purple-500/25">
+              <svg class="w-9 h-9 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+              </svg>
+            </div>
+            <div class="text-left" class:text-right={$locale === 'ar'}>
+              <h2 class="text-3xl font-black text-white leading-tight" class:font-arabic={$locale === 'ar'}>
+                Pioneer Consultants
+              </h2>
+              <p class="text-purple-300 font-medium text-sm -mt-1" class:font-arabic={$locale === 'ar'}>
+                Building the Future
+              </p>
+            </div>
           </div>
           
-          <!-- Social Links -->
-          <div class="flex space-x-4">
-            {#each socialLinks as social}
-              <a 
-                href={social.href} 
-                class="w-10 h-10 bg-neutral-800 hover:bg-gradient-to-br hover:from-primary-600 hover:to-accent-600 rounded-lg flex items-center justify-center text-neutral-400 hover:text-white transition-all duration-300 hover-lift"
-                aria-label={social.label}
-              >
-                {@html social.icon}
-              </a>
-            {/each}
+          <p class="text-gray-300 text-lg font-medium leading-relaxed max-w-2xl mx-auto" class:font-arabic={$locale === 'ar'}>
+            {mounted ? $t('footer.description') : 'Bringing Vision to Reality through innovative construction consultancy and design services across the West Midlands.'}
+          </p>
+        </div>
+
+        <!-- Links Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 mb-16">
+          
+          <!-- Company Links -->
+          <div class="space-y-6">
+            <h3 class="text-white font-bold text-lg flex items-center space-x-2" class:space-x-reverse={$locale === 'ar'} class:font-arabic={$locale === 'ar'}>
+              <svg class="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+              </svg>
+              <span>{mounted ? $t(footerSections.company.title) : 'Company'}</span>
+            </h3>
+            <nav class="space-y-3">
+              {#each footerSections.company.links as link}
+                <a 
+                  href={link.href} 
+                  class="block text-gray-300 hover:text-purple-300 transition-colors duration-300 font-medium group"
+                  class:font-arabic={$locale === 'ar'}
+                >
+                  <span class="relative">
+                    {mounted ? $t(link.key) : ''}
+                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-purple-400 transition-all duration-300 group-hover:w-full"></span>
+                  </span>
+                </a>
+              {/each}
+            </nav>
           </div>
-        </div>
-        
-        <!-- Company Links -->
-        <div>
-          <h4 class="text-heading-3 font-bold text-white mb-6">{$t('footer.company')}</h4>
-          <ul class="space-y-3">
-            {#each footerLinks.company as link}
-              <li>
+
+          <!-- Services Links -->
+          <div class="space-y-6">
+            <h3 class="text-white font-bold text-lg flex items-center space-x-2" class:space-x-reverse={$locale === 'ar'} class:font-arabic={$locale === 'ar'}>
+              <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364-.636l-.707.707M21 12h-1M17.657 17.657l-.707-.707M12 21v-1m-6.364.636l.707-.707M3 12h1m2.343-5.657l.707.707"/>
+              </svg>
+              <span>{mounted ? $t(footerSections.services.title) : 'Services'}</span>
+            </h3>
+            <nav class="space-y-3">
+              {#each footerSections.services.links as link}
                 <a 
                   href={link.href} 
-                  class="text-body text-neutral-300 hover:text-primary-400 transition-colors duration-200 hover:translate-x-1 inline-block transform"
+                  class="block text-gray-300 hover:text-blue-300 transition-colors duration-300 font-medium group"
+                  class:font-arabic={$locale === 'ar'}
                 >
-                  {$t(link.label)}
+                  <span class="relative">
+                    {mounted ? $t(link.key) : ''}
+                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-400 transition-all duration-300 group-hover:w-full"></span>
+                  </span>
                 </a>
-              </li>
-            {/each}
-          </ul>
-        </div>
-        
-        <!-- Services Links -->
-        <div>
-          <h4 class="text-heading-3 font-bold text-white mb-6">{$t('footer.services')}</h4>
-          <ul class="space-y-3">
-            {#each footerLinks.services as link}
-              <li>
+              {/each}
+            </nav>
+          </div>
+
+          <!-- Contact Info -->
+          <div class="space-y-6">
+            <h3 class="text-white font-bold text-lg flex items-center space-x-2" class:space-x-reverse={$locale === 'ar'} class:font-arabic={$locale === 'ar'}>
+              <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+              </svg>
+              <span>{mounted ? $t('footer.contact') : 'Contact'}</span>
+            </h3>
+            <div class="space-y-4">
+              <a 
+                href={`mailto:${contactInfo.email}`} 
+                class="flex items-center space-x-3 text-gray-300 hover:text-emerald-300 transition-colors duration-300 group"
+                class:space-x-reverse={$locale === 'ar'}
+              >
+                <svg class="w-4 h-4 text-emerald-400 group-hover:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"/>
+                </svg>
+                <span class="font-medium break-all">{contactInfo.email}</span>
+              </a>
+              
+              <a 
+                href={`tel:${contactInfo.phone.replace(/\s/g, '')}`} 
+                class="flex items-center space-x-3 text-gray-300 hover:text-emerald-300 transition-colors duration-300 group"
+                class:space-x-reverse={$locale === 'ar'}
+              >
+                <svg class="w-4 h-4 text-emerald-400 group-hover:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+                </svg>
+                <span class="font-medium">{contactInfo.phone}</span>
+              </a>
+              
+              <div class="flex items-start space-x-3 text-gray-300" class:space-x-reverse={$locale === 'ar'}>
+                <svg class="w-4 h-4 text-emerald-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                </svg>
+                <span class="font-medium leading-relaxed">{contactInfo.address}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Legal & Social -->
+          <div class="space-y-6">
+            <h3 class="text-white font-bold text-lg flex items-center space-x-2" class:space-x-reverse={$locale === 'ar'} class:font-arabic={$locale === 'ar'}>
+              <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+              </svg>
+              <span>{mounted ? $t(footerSections.legal.title) : 'Legal'}</span>
+            </h3>
+            
+            <!-- Legal Links -->
+            <nav class="space-y-3 mb-6">
+              {#each footerSections.legal.links as link}
                 <a 
                   href={link.href} 
-                  class="text-body text-neutral-300 hover:text-primary-400 transition-colors duration-200 hover:translate-x-1 inline-block transform"
+                  class="block text-gray-300 hover:text-amber-300 transition-colors duration-300 font-medium group"
+                  class:font-arabic={$locale === 'ar'}
                 >
-                  {$t(link.label)}
+                  <span class="relative">
+                    {mounted ? $t(link.key) : ''}
+                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-amber-400 transition-all duration-300 group-hover:w-full"></span>
+                  </span>
                 </a>
-              </li>
-            {/each}
-          </ul>
+              {/each}
+            </nav>
+            
+            <!-- Social Links -->
+            <div>
+              <h4 class="text-white font-semibold text-sm mb-3 flex items-center space-x-2" class:space-x-reverse={$locale === 'ar'} class:font-arabic={$locale === 'ar'}>
+                <svg class="w-4 h-4 text-pink-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                </svg>
+                <span>{mounted ? $t('footer.social') : 'Follow Us'}</span>
+              </h4>
+              <div class="flex items-center space-x-4" class:space-x-reverse={$locale === 'ar'}>
+                {#each socialLinks as social}
+                  <a 
+                    href={social.href} 
+                    class="w-10 h-10 bg-gray-800 hover:bg-gradient-to-br hover:from-purple-600 hover:to-blue-600 rounded-xl flex items-center justify-center transition-all duration-300 hover:scale-110 hover:shadow-lg group"
+                    aria-label={social.name}
+                  >
+                    <svg class="w-5 h-5 text-gray-300 group-hover:text-white transition-colors duration-300" fill="currentColor" viewBox="0 0 24 24">
+                      <path d={social.icon}/>
+                    </svg>
+                  </a>
+                {/each}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-    
-    <!-- Contact Info Bar -->
-    <div class="py-8 border-t border-neutral-700">
-      <div class="grid-3 gap-6 text-center lg:text-left">
-        <div class="flex items-center justify-center lg:justify-start">
-          <svg class="w-5 h-5 text-primary-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-          </svg>
-          <a href="mailto:info@pioneerconsultants.com" class="text-body text-neutral-300 hover:text-white transition-colors duration-200">
-            info@pioneerconsultants.com
-          </a>
+
+    <!-- Bottom Section -->
+    <div class="border-t border-gray-700/50">
+      <div class="px-4 sm:px-6 lg:px-8 py-8">
+        <div class="max-w-7xl mx-auto">
+          
+          <!-- Bottom Content -->
+          <div class="flex flex-col lg:flex-row items-center justify-between space-y-6 lg:space-y-0">
+            
+            <!-- Copyright -->
+            <div class="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-4 text-center sm:text-left" class:sm:space-x-reverse={$locale === 'ar'} class:sm:text-right={$locale === 'ar'}>
+              <p class="text-gray-400 text-sm font-medium" class:font-arabic={$locale === 'ar'}>
+                © {currentYear} Pioneer Consultants. {mounted ? $t('footer.rights') : 'All rights reserved.'}
+              </p>
+              <span class="hidden sm:block text-gray-600">•</span>
+              <p class="text-gray-500 text-xs" class:font-arabic={$locale === 'ar'}>
+                Made in the West Midlands, UK
+              </p>
+            </div>
+            
+            <!-- Developer Credit -->
+            <div class="flex items-center space-x-3 text-gray-400 text-sm" class:space-x-reverse={$locale === 'ar'}>
+              <svg class="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
+              </svg>
+              <span class="font-medium">
+                Developed by 
+                <a 
+                  href="https://github.com/ahmed-bashir-ali" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  class="text-purple-400 hover:text-purple-300 transition-colors duration-300 font-semibold ml-1"
+                >
+                  Ahmed Bashir Ali
+                </a>
+              </span>
+            </div>
+            
+            <!-- Language Toggle -->
+            <button
+              on:click={locale.toggle}
+              class="flex items-center space-x-2 px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-xl transition-all duration-300 text-gray-300 hover:text-white font-medium group"
+              class:space-x-reverse={$locale === 'ar'}
+              aria-label="Change language"
+            >
+              <svg class="w-4 h-4 group-hover:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"/>
+              </svg>
+              <span class="text-xs font-bold">{$locale.toUpperCase()}</span>
+            </button>
+          </div>
         </div>
-        
-        <div class="flex items-center justify-center lg:justify-start">
-          <svg class="w-5 h-5 text-primary-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
-         </svg>
-         <a href="tel:+441234567890" class="text-body text-neutral-300 hover:text-white transition-colors duration-200">
-           +44 (0) 123 456 7890
-         </a>
-       </div>
-       
-       <div class="flex items-center justify-center lg:justify-start">
-         <svg class="w-5 h-5 text-primary-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-         </svg>
-         <span class="text-body text-neutral-300">
-           West Midlands & Surrounding Areas
-         </span>
-       </div>
-     </div>
-   </div>
-   
-   <!-- Bottom Bar -->
-   <div class="py-6 border-t border-neutral-700">
-     <div class="flex flex-col lg:flex-row justify-between items-center space-y-4 lg:space-y-0">
-       <p class="text-caption text-neutral-400">
-         © {currentYear} Pioneer Consultants Limited. {$t('footer.rights')}
-       </p>
-       
-       <div class="flex space-x-6">
-         {#each footerLinks.legal as link}
-           <a 
-             href={link.href} 
-             class="text-caption text-neutral-400 hover:text-neutral-300 transition-colors duration-200"
-           >
-             {$t(link.label)}
-           </a>
-         {/each}
-       </div>
-     </div>
-   </div>
- </div>
+      </div>
+    </div>
+  </div>
 </footer>
+
+<style>
+  .font-arabic {
+    font-family: var(--font-family-arabic);
+    font-feature-settings: 'liga' 1, 'calt' 1;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Enhanced hover effects */
+  footer a:hover svg {
+    transform: scale(1.1);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Smooth underline animations */
+  .group:hover span span {
+    width: 100%;
+  }
+
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      transition: none !important;
+      animation: none !important;
+    }
+    
+    footer a:hover svg {
+      transform: none !important;
+    }
+  }
+
+  /* Focus visible enhancement */
+  @supports selector(:focus-visible) {
+    a:focus,
+    button:focus {
+      outline: none;
+    }
+    
+    a:focus-visible,
+    button:focus-visible {
+      outline: 2px solid rgb(147 51 234 / 0.7);
+      outline-offset: 2px;
+    }
+  }
+
+  /* High contrast mode */
+  @media (prefers-contrast: high) {
+    footer {
+      border: 2px solid white;
+    }
+    
+    footer a,
+    footer button {
+      border: 1px solid transparent;
+    }
+    
+    footer a:hover,
+    footer button:hover {
+      border-color: currentColor;
+    }
+  }
+</style>

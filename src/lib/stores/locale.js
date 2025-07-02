@@ -212,6 +212,12 @@ const translations = {
         title: 'Ready to Start Your Project?',
         subtitle: 'Let our expert team help you bring your vision to life with our comprehensive range of services across the West Midlands and surrounding areas.',
         button: 'Get Your Free Consultation'
+      },
+      projectTypes: {
+        bim: 'BIM Modelling',
+        structural: 'Structural Calculations',
+        interior: 'Interior Design',
+        visualization: '3D Building Visualisation'
       }
     },
     contact: {
@@ -547,6 +553,12 @@ const translations = {
         title: 'هل أنت مستعد لبدء مشروعك؟',
         subtitle: 'دع فريق الخبراء لدينا يساعدك في تحقيق رؤيتك من خلال مجموعتنا الشاملة من الخدمات عبر ويست ميدلاندز والمناطق المحيطة.',
         button: 'احصل على استشارتك المجانية'
+      },
+      projectTypes: {
+        bim: 'نمذجة معلومات البناء',
+        structural: 'الحسابات الإنشائية',
+        interior: 'التصميم الداخلي',
+        visualization: 'التصور ثلاثي الأبعاد للمباني'
       }
     },
     contact: {
@@ -674,6 +686,7 @@ const translations = {
       company: 'الشركة',
       services: 'الخدمات',
       contact: 'اتصل بنا',
+   
       legal: 'قانوني',
       social: 'تابعنا',
       rights: 'جميع الحقوق محفوظة.',

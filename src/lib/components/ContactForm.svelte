@@ -192,10 +192,11 @@
             <div class="space-y-6">
               <!-- Name -->
               <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" class:font-arabic={$locale === 'ar'}>
+                <label for="contact-name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" class:font-arabic={$locale === 'ar'}>
                   {$t('contact.form.fields.name.label')} *
                 </label>
                 <input
+                  id="contact-name"
                   type="text"
                   bind:value={formData.name}
                   placeholder={$t('contact.form.fields.name.placeholder')}
@@ -210,10 +211,11 @@
 
               <!-- Email -->
               <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" class:font-arabic={$locale === 'ar'}>
+                <label for="contact-email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" class:font-arabic={$locale === 'ar'}>
                   {$t('contact.form.fields.email.label')} *
                 </label>
                 <input
+                  id="contact-email"
                   type="email"
                   bind:value={formData.email}
                   placeholder={$t('contact.form.fields.email.placeholder')}
@@ -228,10 +230,11 @@
 
               <!-- Phone (Optional) -->
               <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" class:font-arabic={$locale === 'ar'}>
+                <label for="contact-phone" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" class:font-arabic={$locale === 'ar'}>
                   {$t('contact.form.fields.phone.label')} <span class="text-gray-400">(Optional)</span>
                 </label>
                 <input
+                  id="contact-phone"
                   type="tel"
                   bind:value={formData.phone}
                   placeholder={$t('contact.form.fields.phone.placeholder')}
@@ -263,9 +266,9 @@
             <div class="space-y-6">
               <!-- Project Type -->
               <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3" class:font-arabic={$locale === 'ar'}>
+                <span class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3" class:font-arabic={$locale === 'ar'}>
                   {$t('contact.form.fields.subject.label')} *
-                </label>
+                </span>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                   {#each projectTypes as type}
                     <button
@@ -290,10 +293,11 @@
 
               <!-- Message -->
               <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" class:font-arabic={$locale === 'ar'}>
+                <label for="contact-message" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" class:font-arabic={$locale === 'ar'}>
                   {$t('contact.form.fields.message.label')} *
                 </label>
                 <textarea
+                  id="contact-message"
                   bind:value={formData.message}
                   rows="6"
                   placeholder={$t('contact.form.fields.message.placeholder')}

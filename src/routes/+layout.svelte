@@ -28,8 +28,3 @@
   
   <!-- Footer -->
   <Footer />
-  <style>
-	.font-arabic {
-	  font-family: var(--font-family-arabic);
-	}
-  </style>
