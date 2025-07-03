@@ -77,10 +77,10 @@
     }, 100);
   }
 
-  // Scroll detection
+  // Scroll detection - Show navbar by default, hide when scrolling
   function handleScroll() {
     if (typeof window !== 'undefined') {
-      isScrolled = window.scrollY > 20;
+      isScrolled = window.scrollY > 100; // Hide after scrolling 100px
     }
   }
 
@@ -128,11 +128,11 @@
   });
 </script>
 
-<!-- Navigation Container -->
-<nav class="fixed top-0 left-0 right-0 z-50 transition-all duration-500 {
+<!-- Advanced Navigation Container -->
+<nav class="fixed top-0 left-0 right-0 z-50 transition-all duration-700 ease-out {
   isScrolled 
-    ? 'bg-white/90 dark:bg-gray-900/90 backdrop-blur-2xl shadow-lg border-b border-gray-200/30 dark:border-gray-700/30' 
-    : 'bg-transparent'
+    ? 'nav-hidden' 
+    : 'nav-visible'
 }" aria-label="Main navigation">
   
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -142,63 +142,51 @@
       <div class="flex items-center" class:flex-row-reverse={$locale === 'ar'}>
         <a href="/" class="group flex items-center space-x-3 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:ring-offset-2 rounded-2xl p-2 transition-all duration-300" class:space-x-reverse={$locale === 'ar'} aria-label="Pioneer Consultants Home">
           
-          <!-- Minimal Logo Icon -->
+          <!-- Advanced Logo Icon -->
           <div class="relative">
-            <div class="w-9 h-9 lg:w-10 lg:h-10 bg-gradient-to-br from-purple-600 to-blue-600 rounded-xl flex items-center justify-center transition-all duration-300 group-hover:scale-105 group-hover:rotate-3">
-              <svg class="w-5 h-5 lg:w-6 lg:h-6 text-white transition-transform duration-300 group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+            <div class="logo-container transition-all duration-500 group-hover:scale-105 group-hover:rotate-2">
+              <div class="logo-glow"></div>
+              <svg class="logo-icon transition-all duration-500 group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
               </svg>
             </div>
           </div>
           
-          <!-- Logo Text -->
+          <!-- Advanced Logo Text -->
           <div class="hidden sm:block">
-            <div class="text-lg lg:text-xl font-black leading-tight {
-              isScrolled 
-                ? 'text-gray-900 dark:text-white' 
-                : 'text-white'
-            } transition-colors duration-300" class:font-arabic={$locale === 'ar'}>
+            <div class="logo-text-primary transition-all duration-500" class:font-arabic={$locale === 'ar'}>
               Pioneer
             </div>
-            <div class="text-xs font-medium {
-              isScrolled 
-                ? 'text-gray-600 dark:text-gray-400' 
-                : 'text-white/70'
-            } transition-colors duration-300 -mt-0.5" class:font-arabic={$locale === 'ar'}>
+            <div class="logo-text-secondary transition-all duration-500" class:font-arabic={$locale === 'ar'}>
               Consultants
             </div>
           </div>
         </a>
       </div>
 
-      <!-- Desktop Navigation Links -->
-      <div class="hidden lg:flex items-center space-x-1" class:space-x-reverse={$locale === 'ar'}>
+      <!-- Advanced Desktop Navigation Links -->
+      <div class="hidden lg:flex items-center space-x-2" class:space-x-reverse={$locale === 'ar'}>
         {#each navItems as item}
           <a 
             href={item.href}
-            class="group relative px-4 py-2 rounded-xl font-semibold text-sm transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:ring-offset-2 {
-              isActiveRoute(item.href)
-                ? isScrolled
-                  ? 'text-purple-700 dark:text-purple-300 bg-purple-50 dark:bg-purple-900/30'
-                  : 'text-purple-200 bg-white/15'
-                : isScrolled 
-                  ? 'text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 hover:bg-purple-50/50 dark:hover:bg-purple-900/20'
-                  : 'text-white/90 hover:text-white hover:bg-white/10'
-            }"
+            class="nav-link {isActiveRoute(item.href) ? 'nav-link-active' : ''}"
             class:font-arabic={$locale === 'ar'}
             aria-current={isActiveRoute(item.href) ? 'page' : undefined}
           >
-            <span class="relative z-10 flex items-center space-x-2" class:space-x-reverse={$locale === 'ar'}>
-              <svg class="w-4 h-4 transition-all duration-300 group-hover:scale-110 group-hover:rotate-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+            <span class="nav-link-content">
+              <svg class="nav-link-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d={item.icon}/>
               </svg>
-              <span>{mounted ? $t(item.key) : ''}</span>
+              <span class="nav-link-text">{mounted ? $t(item.key) : ''}</span>
             </span>
             
-            <!-- Active indicator -->
+            <!-- Enhanced Active indicator -->
             {#if isActiveRoute(item.href)}
-              <div class="absolute bottom-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-purple-500 rounded-full"></div>
+              <div class="nav-link-indicator"></div>
             {/if}
+            
+            <!-- Hover effect background -->
+            <div class="nav-link-bg"></div>
           </a>
         {/each}
       </div>
@@ -206,60 +194,52 @@
       <!-- Controls Section -->
       <div class="flex items-center space-x-2" class:space-x-reverse={$locale === 'ar'}>
         
-        <!-- Language Toggle -->
+        <!-- Advanced Language Toggle -->
         <button
           on:click={locale.toggle}
-          class="p-2 rounded-xl transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:ring-offset-2 group {
-            isScrolled 
-              ? 'text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 hover:bg-purple-50/50 dark:hover:bg-purple-900/20'
-              : 'text-white/80 hover:text-white hover:bg-white/10'
-          }"
+          class="nav-control-btn"
           aria-label="Change language"
         >
-          <div class="flex items-center space-x-1 text-xs font-bold">
-            <svg class="w-4 h-4 transition-transform duration-300 group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+          <div class="nav-control-content">
+            <svg class="nav-control-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"/>
             </svg>
-            <span class="transition-all duration-300 group-hover:scale-105">{$locale.toUpperCase()}</span>
+            <span class="nav-control-text">{$locale.toUpperCase()}</span>
           </div>
         </button>
 
-        <!-- CTA Button - Desktop -->
+        <!-- Advanced CTA Button - Desktop -->
         <a
           href="/contact"
-          class="hidden lg:inline-flex items-center space-x-2 px-5 py-2.5 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-semibold text-sm rounded-xl hover:shadow-lg hover:shadow-purple-500/25 hover:-translate-y-0.5 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:ring-offset-2"
+          class="hidden lg:inline-flex nav-cta-btn"
           class:space-x-reverse={$locale === 'ar'}
           class:font-arabic={$locale === 'ar'}
         >
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+          <svg class="nav-cta-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
           </svg>
-          <span>{mounted ? $t('nav.contact') : 'Contact'}</span>
+          <span class="nav-cta-text">{mounted ? $t('nav.contact') : 'Contact'}</span>
         </a>
 
         <!-- Advanced Mobile Menu Button -->
         <button
           on:click={toggleMobileMenu}
-          class="lg:hidden relative p-2 rounded-xl transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:ring-offset-2 {
-            isScrolled 
-              ? 'text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 hover:bg-purple-50/50 dark:hover:bg-purple-900/20'
-              : 'text-white hover:text-white/80 hover:bg-white/10'
-          }"
+          class="lg:hidden nav-mobile-btn {isOpen ? 'nav-mobile-btn-open' : ''}"
           aria-label={isOpen ? 'Close menu' : 'Open menu'}
           aria-expanded={isOpen}
         >
-          <div class="w-6 h-6 relative flex items-center justify-center">
+          <div class="nav-mobile-hamburger">
             <!-- Top line -->
-            <span class="absolute w-5 h-0.5 bg-current transform transition-all duration-300 ease-out {
-              isOpen ? 'rotate-45 translate-y-0' : '-translate-y-1.5'
+            <span class="nav-mobile-line nav-mobile-line-top {
+              isOpen ? 'nav-mobile-line-open-top' : ''
             }"></span>
             <!-- Middle line -->
-            <span class="absolute w-5 h-0.5 bg-current transition-all duration-300 ease-out {
-              isOpen ? 'opacity-0 scale-0' : 'opacity-100 scale-100'
+            <span class="nav-mobile-line nav-mobile-line-middle {
+              isOpen ? 'nav-mobile-line-open-middle' : ''
             }"></span>
             <!-- Bottom line -->
-            <span class="absolute w-5 h-0.5 bg-current transform transition-all duration-300 ease-out {
-              isOpen ? '-rotate-45 translate-y-0' : 'translate-y-1.5'
+            <span class="nav-mobile-line nav-mobile-line-bottom {
+              isOpen ? 'nav-mobile-line-open-bottom' : ''
             }"></span>
           </div>
         </button>
@@ -380,6 +360,438 @@
 {/if}
 
 <style>
+  /* ==== ADVANCED NAVIGATION DESIGN SYSTEM ==== */
+  /* Using theme colors from app.css for consistent branding */
+
+  /* Navigation Container States */
+  .nav-visible {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border-bottom: 1px solid rgba(var(--color-neutral-200), 0.3);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  .nav-hidden {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border-bottom: 1px solid rgba(var(--color-neutral-200), 0.3);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+    transform: translateY(-100%);
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .nav-visible {
+      background: rgba(var(--color-neutral-900), 0.95);
+      border-bottom: 1px solid rgba(var(--color-neutral-700), 0.3);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    }
+
+    .nav-hidden {
+      background: rgba(var(--color-neutral-900), 0.95);
+      border-bottom: 1px solid rgba(var(--color-neutral-700), 0.3);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    }
+  }
+
+  /* ==== LOGO SYSTEM ==== */
+  .logo-container {
+    position: relative;
+    width: 2.5rem;
+    height: 2.5rem;
+    background: linear-gradient(135deg, var(--color-purple-600), var(--color-primary-600));
+    border-radius: 0.875rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  @media (min-width: 1024px) {
+    .logo-container {
+      width: 2.75rem;
+      height: 2.75rem;
+    }
+  }
+
+  .logo-glow {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--color-purple-500), var(--color-primary-500));
+    border-radius: inherit;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
+
+  .logo-container:hover .logo-glow {
+    opacity: 0.3;
+  }
+
+  .logo-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+    color: white;
+    position: relative;
+    z-index: 1;
+  }
+
+  @media (min-width: 1024px) {
+    .logo-icon {
+      width: 1.5rem;
+      height: 1.5rem;
+    }
+  }
+
+  /* Logo Text Styling */
+  .logo-text-primary {
+    font-size: 1.125rem;
+    font-weight: 900;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+  }
+
+  @media (min-width: 1024px) {
+    .logo-text-primary {
+      font-size: 1.25rem;
+    }
+  }
+
+  .nav-visible .logo-text-primary {
+    color: var(--color-neutral-900);
+  }
+
+  .nav-hidden .logo-text-primary {
+    color: var(--color-neutral-900);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .nav-visible .logo-text-primary,
+    .nav-hidden .logo-text-primary {
+      color: white;
+    }
+  }
+
+  .logo-text-secondary {
+    font-size: 0.75rem;
+    font-weight: 500;
+    line-height: 1;
+    margin-top: -0.125rem;
+    letter-spacing: 0.02em;
+  }
+
+  .nav-visible .logo-text-secondary,
+  .nav-hidden .logo-text-secondary {
+    color: var(--color-neutral-600);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .nav-visible .logo-text-secondary,
+    .nav-hidden .logo-text-secondary {
+      color: var(--color-neutral-400);
+    }
+  }
+
+  /* ==== NAVIGATION LINKS ==== */
+  .nav-link {
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 0.625rem 1rem;
+    border-radius: 0.875rem;
+    font-weight: 600;
+    font-size: 0.875rem;
+    text-decoration: none;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  .nav-link-content {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    position: relative;
+    z-index: 2;
+  }
+
+  .nav-link-icon {
+    width: 1rem;
+    height: 1rem;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .nav-link-text {
+    font-weight: 600;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .nav-link-bg {
+    position: absolute;
+    inset: 0;
+    background: rgba(var(--color-purple-500), 0.1);
+    border-radius: inherit;
+    opacity: 0;
+    transform: scale(0.8);
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    z-index: 1;
+  }
+
+  .nav-link-indicator {
+    position: absolute;
+    bottom: 0.25rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0.25rem;
+    height: 0.25rem;
+    background: var(--color-purple-600);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  /* Navigation Link States - Always Visible with Solid Background */
+  .nav-visible .nav-link,
+  .nav-hidden .nav-link {
+    color: var(--color-neutral-700);
+  }
+
+  .nav-visible .nav-link:hover,
+  .nav-hidden .nav-link:hover {
+    color: var(--color-purple-700);
+    transform: translateY(-1px);
+  }
+
+  .nav-visible .nav-link:hover .nav-link-bg,
+  .nav-hidden .nav-link:hover .nav-link-bg {
+    opacity: 1;
+    transform: scale(1);
+    background: rgba(var(--color-purple-500), 0.1);
+  }
+
+  .nav-visible .nav-link:hover .nav-link-icon,
+  .nav-hidden .nav-link:hover .nav-link-icon {
+    transform: scale(1.1) rotate(3deg);
+  }
+
+  .nav-visible .nav-link-active,
+  .nav-hidden .nav-link-active {
+    color: var(--color-purple-700);
+    background: rgba(var(--color-purple-500), 0.1);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .nav-visible .nav-link,
+    .nav-hidden .nav-link {
+      color: var(--color-neutral-300);
+    }
+
+    .nav-visible .nav-link:hover,
+    .nav-hidden .nav-link:hover {
+      color: var(--color-purple-400);
+    }
+
+    .nav-visible .nav-link:hover .nav-link-bg,
+    .nav-hidden .nav-link:hover .nav-link-bg {
+      background: rgba(var(--color-purple-400), 0.15);
+    }
+
+    .nav-visible .nav-link-active,
+    .nav-hidden .nav-link-active {
+      color: var(--color-purple-400);
+      background: rgba(var(--color-purple-400), 0.15);
+    }
+  }
+
+  /* ==== NAVIGATION CONTROLS ==== */
+  .nav-control-btn {
+    position: relative;
+    padding: 0.5rem;
+    border-radius: 0.875rem;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    overflow: hidden;
+  }
+
+  .nav-control-content {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    position: relative;
+    z-index: 2;
+  }
+
+  .nav-control-icon {
+    width: 1rem;
+    height: 1rem;
+    transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .nav-control-text {
+    font-size: 0.75rem;
+    font-weight: 700;
+    transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .nav-visible .nav-control-btn,
+  .nav-hidden .nav-control-btn {
+    color: var(--color-neutral-600);
+  }
+
+  .nav-visible .nav-control-btn:hover,
+  .nav-hidden .nav-control-btn:hover {
+    color: var(--color-purple-600);
+    background: rgba(var(--color-purple-500), 0.1);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .nav-visible .nav-control-btn,
+    .nav-hidden .nav-control-btn {
+      color: var(--color-neutral-400);
+    }
+
+    .nav-visible .nav-control-btn:hover,
+    .nav-hidden .nav-control-btn:hover {
+      color: var(--color-purple-400);
+      background: rgba(var(--color-purple-400), 0.15);
+    }
+  }
+
+  .nav-control-btn:hover .nav-control-icon,
+  .nav-control-btn:hover .nav-control-text {
+    transform: scale(1.05);
+  }
+
+  /* ==== CTA BUTTON ==== */
+  .nav-cta-btn {
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.625rem 1.25rem;
+    background: linear-gradient(135deg, var(--color-purple-600), var(--color-primary-600));
+    color: white;
+    font-weight: 600;
+    font-size: 0.875rem;
+    border-radius: 0.875rem;
+    text-decoration: none;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(var(--color-purple-600), 0.3);
+  }
+
+  .nav-cta-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--color-purple-700), var(--color-primary-700));
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+
+  .nav-cta-btn:hover::before {
+    opacity: 1;
+  }
+
+  .nav-cta-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(var(--color-purple-600), 0.4);
+  }
+
+  .nav-cta-icon,
+  .nav-cta-text {
+    position: relative;
+    z-index: 2;
+    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .nav-cta-icon {
+    width: 1rem;
+    height: 1rem;
+  }
+
+  .nav-cta-btn:hover .nav-cta-icon {
+    transform: scale(1.1) rotate(-3deg);
+  }
+
+  /* ==== MOBILE MENU BUTTON ==== */
+  .nav-mobile-btn {
+    position: relative;
+    padding: 0.5rem;
+    border-radius: 0.875rem;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .nav-mobile-hamburger {
+    width: 1.5rem;
+    height: 1.5rem;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .nav-mobile-line {
+    position: absolute;
+    width: 1.25rem;
+    height: 0.125rem;
+    border-radius: 0.125rem;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .nav-visible .nav-mobile-line,
+  .nav-hidden .nav-mobile-line {
+    background: var(--color-neutral-700);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .nav-visible .nav-mobile-line,
+    .nav-hidden .nav-mobile-line {
+      background: var(--color-neutral-300);
+    }
+  }
+
+  .nav-mobile-line-top {
+    transform: translateY(-0.375rem);
+  }
+
+  .nav-mobile-line-bottom {
+    transform: translateY(0.375rem);
+  }
+
+  .nav-mobile-line-open-top {
+    transform: rotate(45deg) translateY(0);
+  }
+
+  .nav-mobile-line-open-middle {
+    opacity: 0;
+    transform: scale(0);
+  }
+
+  .nav-mobile-line-open-bottom {
+    transform: rotate(-45deg) translateY(0);
+  }
+
+  .nav-visible .nav-mobile-btn:hover,
+  .nav-hidden .nav-mobile-btn:hover {
+    background: rgba(var(--color-purple-500), 0.1);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .nav-visible .nav-mobile-btn:hover,
+    .nav-hidden .nav-mobile-btn:hover {
+      background: rgba(var(--color-purple-400), 0.15);
+    }
+  }
+
+  /* ==== UTILITY CLASSES ==== */
   .font-arabic {
     font-family: var(--font-family-arabic);
     font-feature-settings: 'liga' 1, 'calt' 1;
@@ -392,7 +804,27 @@
                 opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
-  /* Reduced motion support */
+  /* ==== ACCESSIBILITY & RESPONSIVENESS ==== */
+  
+  /* Focus States */
+  @supports selector(:focus-visible) {
+    .nav-link:focus,
+    .nav-control-btn:focus,
+    .nav-cta-btn:focus,
+    .nav-mobile-btn:focus {
+      outline: none;
+    }
+    
+    .nav-link:focus-visible,
+    .nav-control-btn:focus-visible,
+    .nav-cta-btn:focus-visible,
+    .nav-mobile-btn:focus-visible {
+      outline: 2px solid var(--color-purple-500);
+      outline-offset: 2px;
+    }
+  }
+
+  /* Reduced Motion */
   @media (prefers-reduced-motion: reduce) {
     * {
       transition-duration: 0.01ms !important;
@@ -406,34 +838,40 @@
     }
   }
 
-  /* Focus visible enhancement */
-  @supports selector(:focus-visible) {
-    button:focus,
-    a:focus {
-      outline: none;
+  /* High Contrast */
+  @media (prefers-contrast: high) {
+    .nav-link,
+    .nav-control-btn,
+    .nav-cta-btn,
+    .nav-mobile-btn {
+      border: 1px solid currentColor;
     }
     
-    button:focus-visible,
-    a:focus-visible {
-      outline: 2px solid rgb(147 51 234 / 0.5);
-      outline-offset: 2px;
-    }
-  }
-
-  /* High contrast mode */
-  @media (prefers-contrast: high) {
     .mobile-menu-content {
       border: 2px solid currentColor;
     }
-    
-    nav a,
-    nav button {
-      border: 1px solid transparent;
-    }
-    
-    nav a:hover,
-    nav button:hover {
-      border-color: currentColor;
-    }
+  }
+
+  /* RTL Support */
+  [dir="rtl"] .nav-link-content {
+    flex-direction: row-reverse;
+  }
+
+  [dir="rtl"] .nav-control-content {
+    flex-direction: row-reverse;
+  }
+
+  [dir="rtl"] .nav-cta-btn {
+    flex-direction: row-reverse;
+  }
+
+  /* Performance Optimizations */
+  .nav-link,
+  .nav-control-btn,
+  .nav-cta-btn,
+  .nav-mobile-btn {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000px;
   }
 </style>

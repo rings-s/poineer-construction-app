@@ -485,8 +485,8 @@
         <!-- Enhanced Title with 3D Effect -->
         <div class="title-trigger mb-6 sm:mb-8" style="transform-style: preserve-3d;">
           <div class="overflow-hidden">
-            <h1 class="hero-title font-black text-black dark:text-white leading-[0.9] break-words" 
-                style="font-size: clamp(2.5rem, 8vw, 5rem); transform-style: preserve-3d;" 
+            <h1 class="hero-title font-black text-black dark:text-white leading-[1.3] break-words" 
+                style="font-size: clamp(2.5rem, 6vw, 4.5rem); transform-style: preserve-3d;" 
                 class:font-arabic={$locale === 'ar'}>
               <div class="{titleVisible ? 'animate-slide-up-3d' : 'translate-y-full opacity-0'} transition-all duration-1000 ease-out">
                 <span class="block mb-2 hyphens-auto relative" lang="{$locale}" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.1);">
@@ -648,6 +648,12 @@
     word-break: break-word;
     overflow-wrap: break-word;
     hyphens: auto;
+  }
+
+  /* Ensure Arabic title matches English title size */
+  .hero-title.font-arabic {
+    font-size: clamp(2.5rem, 6vw, 4.5rem) !important;
+    letter-spacing: 0.02em;
   }
 
   /* Performance optimizations */
