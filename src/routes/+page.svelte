@@ -128,7 +128,6 @@
     initializeParticleSystem();
     initialize3DShapes();
     initializeInteractiveElements();
-    initializeBlueprintSystem();
     initializePerformanceMonitoring();
     
     // Start main animation sequence
@@ -156,11 +155,6 @@
         }
       });
       
-      // Clean up blueprint overlay
-      const blueprintOverlay = document.querySelector('.blueprint-overlay');
-      if (blueprintOverlay && blueprintOverlay.parentNode) {
-        blueprintOverlay.parentNode.removeChild(blueprintOverlay);
-      }
     }
     
     // Safe GSAP cleanup - only on client side
@@ -364,54 +358,6 @@
     });
   }
 
-  // Blueprint drawing system
-  function initializeBlueprintSystem() {
-    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    svg.setAttribute('class', 'blueprint-overlay');
-    svg.setAttribute('viewBox', '0 0 1920 1080');
-    svg.style.cssText = `
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 2;
-      opacity: 0.3;
-    `;
-    
-    // Create blueprint paths
-    const paths = [
-      'M100,200 L400,200 L400,500 L700,500',
-      'M800,150 L1200,150 L1200,400 L1500,400',
-      'M200,600 L600,600 L600,800 L900,800'
-    ];
-    
-    paths.forEach((pathData, index) => {
-      const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-      path.setAttribute('d', pathData);
-      path.setAttribute('stroke', '#3b82f6');
-      path.setAttribute('stroke-width', '2');
-      path.setAttribute('fill', 'none');
-      path.setAttribute('stroke-dasharray', '10,5');
-      
-      svg.appendChild(path);
-      
-      // Animate path drawing
-      const pathLength = path.getTotalLength();
-      path.style.strokeDasharray = pathLength;
-      path.style.strokeDashoffset = pathLength;
-      
-      gsap.to(path.style, {
-        strokeDashoffset: 0,
-        duration: 3,
-        delay: index * 0.5,
-        ease: 'power2.inOut'
-      });
-    });
-    
-    document.body.appendChild(svg);
-  }
 
   // Performance monitoring
   function initializePerformanceMonitoring() {
@@ -480,7 +426,8 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center sm:text-left" 
            class:text-right={$locale === 'ar'} 
-           class:sm:text-right={$locale === 'ar'}>
+           class:sm:text-right={$locale === 'ar'}
+           style={$locale === 'ar' ? 'direction: rtl;' : ''}>
         
         <!-- Enhanced Title with 3D Effect -->
         <div class="title-trigger mb-6 sm:mb-8" style="transform-style: preserve-3d;">
@@ -509,7 +456,7 @@
         <!-- Enhanced Subtitle with Wave Animation -->
         <div class="subtitle-trigger mb-8 sm:mb-12">
           <div class="max-w-none sm:max-w-2xl lg:max-w-3xl" 
-               class:sm:ml-auto={$locale === 'ar'}>
+               class:ml-auto={$locale === 'ar'}>
             <div class="overflow-hidden">
               <p class="hero-subtitle {subtitleVisible ? 'animate-wave-in' : 'translate-y-8 opacity-0'} transition-all duration-1000 delay-400 text-gray-600 dark:text-gray-300 font-medium leading-relaxed break-words hyphens-auto"
                  style="font-size: clamp(0.875rem, 2.5vw, 1rem); line-height: 1.7; transform: translateZ(5px);"
@@ -525,10 +472,14 @@
 
         <!-- Enhanced Interactive Buttons -->
         <div class="buttons-trigger">
-          <div class="hero-buttons flex flex-col sm:flex-row gap-4 sm:gap-6 items-center justify-center sm:justify-start" 
-               class:sm:justify-end={$locale === 'ar'}
+          <div class="hero-buttons flex flex-col sm:flex-row gap-4 sm:gap-6 items-center" 
+               class:justify-center={$locale !== 'ar'}
+               class:sm:justify-start={$locale !== 'ar'}
                class:justify-end={$locale === 'ar'}
-               class:sm:flex-row-reverse={$locale === 'ar'}>
+               class:sm:justify-end={$locale === 'ar'}
+               class:items-end={$locale === 'ar'}
+               class:sm:flex-row-reverse={$locale === 'ar'}
+               style={$locale === 'ar' ? 'direction: rtl; margin-left: auto; text-align: right; display: flex; width: 100%;' : ''}>
             <a href="/services" 
                class="btn {buttonsVisible ? 'animate-magnetic-rise' : 'scale-0 opacity-0'} transition-all duration-700 delay-600 group relative overflow-hidden w-full sm:w-auto px-6 py-3 sm:px-8 sm:py-4 bg-black dark:bg-white text-white dark:text-black font-bold rounded-xl hover:shadow-xl hover:-translate-y-0.5 transform-gpu inline-flex items-center justify-center magnetic-btn"
                style="font-size: clamp(0.875rem, 2vw, 0.875rem); transform: translateZ(15px);">
@@ -662,10 +613,6 @@
     will-change: transform;
   }
 
-  /* Blueprint overlay styles */
-  :global(.blueprint-overlay) {
-    filter: drop-shadow(0 0 5px rgba(59, 130, 246, 0.5));
-  }
 
   /* Reduced motion support */
   @media (prefers-reduced-motion: reduce) {
