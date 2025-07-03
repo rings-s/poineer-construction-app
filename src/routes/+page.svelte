@@ -30,7 +30,8 @@
 
   // Construction particle class (moved to module scope)
   class ConstructionParticle {
-    constructor() {
+    constructor(canvas) {
+      this.canvas = canvas;
       this.reset();
       this.type = Math.random() > 0.7 ? 'blueprint' : 'dust';
       this.shape = ['circle', 'square', 'triangle'][Math.floor(Math.random() * 3)];
@@ -141,24 +142,34 @@
     if (mainTimeline) {
       mainTimeline.kill();
     }
-    ScrollTrigger.getAll().forEach(trigger => trigger.kill());
     
-    // Clean up floating cubes
-    shapeSystem.cubes.forEach(cube => {
-      if (cube.element && cube.element.parentNode) {
-        cube.element.parentNode.removeChild(cube.element);
-      }
-    });
-    
-    // Clean up blueprint overlay
-    const blueprintOverlay = document.querySelector('.blueprint-overlay');
-    if (blueprintOverlay && blueprintOverlay.parentNode) {
-      blueprintOverlay.parentNode.removeChild(blueprintOverlay);
+    // Clean up ScrollTrigger instances
+    if (typeof ScrollTrigger !== 'undefined') {
+      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
     }
     
-    // Safe GSAP cleanup
-    if (typeof window !== 'undefined' && document.body) {
-      gsap.killTweensOf("*");
+    // Clean up floating cubes
+    if (typeof document !== 'undefined') {
+      shapeSystem.cubes.forEach(cube => {
+        if (cube.element && cube.element.parentNode) {
+          cube.element.parentNode.removeChild(cube.element);
+        }
+      });
+      
+      // Clean up blueprint overlay
+      const blueprintOverlay = document.querySelector('.blueprint-overlay');
+      if (blueprintOverlay && blueprintOverlay.parentNode) {
+        blueprintOverlay.parentNode.removeChild(blueprintOverlay);
+      }
+    }
+    
+    // Safe GSAP cleanup - only on client side
+    if (typeof window !== 'undefined' && typeof gsap !== 'undefined') {
+      try {
+        gsap.killTweensOf('*');
+      } catch (e) {
+        console.warn('GSAP cleanup error:', e);
+      }
     }
   });
 
@@ -224,11 +235,10 @@
     const particles = [];
     const blueprintLines = [];
     
+    
     // Initialize particles
     for (let i = 0; i < 50; i++) {
-      const particle = new ConstructionParticle();
-      particle.canvas = canvas;
-      particles.push(particle);
+      particles.push(new ConstructionParticle(canvas));
     }
     
     // Animation loop
@@ -443,11 +453,11 @@
   style="mix-blend-mode: screen;"
 ></canvas>
 
-<!-- Morphing Background Shapes -->
+<!-- Morphing Background Shapes with better spacing -->
 <div class="fixed inset-0 overflow-hidden pointer-events-none z-0">
-  <div class="morphing-shape absolute top-[10%] left-[5%] w-64 h-64 bg-gradient-to-br from-purple-500/20 to-blue-500/20 rounded-full blur-3xl"></div>
-  <div class="morphing-shape absolute top-[60%] right-[10%] w-96 h-96 bg-gradient-to-tl from-blue-500/15 to-indigo-500/15 rounded-full blur-3xl"></div>
-  <div class="morphing-shape absolute bottom-[20%] left-[30%] w-48 h-48 bg-gradient-to-r from-green-500/10 to-emerald-500/10 rounded-full blur-2xl"></div>
+  <div class="morphing-shape absolute top-[5%] left-[2%] w-64 h-64 bg-gradient-to-br from-purple-500/20 to-blue-500/20 rounded-full blur-3xl"></div>
+  <div class="morphing-shape absolute top-[70%] right-[5%] w-96 h-96 bg-gradient-to-tl from-blue-500/15 to-indigo-500/15 rounded-full blur-3xl"></div>
+  <div class="morphing-shape absolute bottom-[10%] left-[85%] w-48 h-48 bg-gradient-to-r from-green-500/10 to-emerald-500/10 rounded-full blur-2xl"></div>
 </div>
 
 <!-- Enhanced Hero Section -->
@@ -517,6 +527,7 @@
         <div class="buttons-trigger">
           <div class="hero-buttons flex flex-col sm:flex-row gap-4 sm:gap-6 items-center justify-center sm:justify-start" 
                class:sm:justify-end={$locale === 'ar'}
+               class:justify-end={$locale === 'ar'}
                class:sm:flex-row-reverse={$locale === 'ar'}>
             <a href="/services" 
                class="btn {buttonsVisible ? 'animate-magnetic-rise' : 'scale-0 opacity-0'} transition-all duration-700 delay-600 group relative overflow-hidden w-full sm:w-auto px-6 py-3 sm:px-8 sm:py-4 bg-black dark:bg-white text-white dark:text-black font-bold rounded-xl hover:shadow-xl hover:-translate-y-0.5 transform-gpu inline-flex items-center justify-center magnetic-btn"

@@ -108,13 +108,15 @@
   <div class="relative z-10 w-full">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="hero-trigger text-center sm:text-left" 
+           dir="{$locale === 'ar' ? 'rtl' : 'ltr'}"
            class:text-right={$locale === 'ar'} 
            class:sm:text-right={$locale === 'ar'}>
         
         <!-- Hero Content -->
         <div class="space-y-6 sm:space-y-8">
           <!-- Icon -->
-          <div class="{heroVisible ? 'animate-scale-in' : 'scale-0 opacity-0'} transition-all duration-1000 flex justify-center sm:justify-start" class:sm:justify-end={$locale === 'ar'}>
+          <div class="{heroVisible ? 'animate-scale-in' : 'scale-0 opacity-0'} transition-all duration-1000 flex justify-center
+                      {$locale === 'ar' ? 'sm:justify-end' : 'sm:justify-start'}">
             <div class="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-purple-600 to-blue-600 rounded-2xl flex items-center justify-center">
               <svg class="w-8 h-8 sm:w-10 sm:h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/>
@@ -130,30 +132,30 @@
             </span>
           </h1>
           
-          <p class="{heroVisible ? 'animate-fade-in' : 'translate-y-6 opacity-0'} transition-all duration-1000 delay-400 text-gray-600 dark:text-gray-300 font-medium leading-relaxed max-w-3xl"
-             style="font-size: clamp(0.875rem, 2.5vw, 1rem); line-height: 1.7;"
-             class:font-arabic={$locale === 'ar'} 
-             class:text-right={$locale === 'ar'}
-             class:leading-loose={$locale === 'ar'} 
-             class:mx-auto={$locale === 'ar'}
-             class:sm:ml-auto={$locale === 'ar'}
+          <p class="{heroVisible ? 'animate-fade-in' : 'translate-y-6 opacity-0'} transition-all duration-1000 delay-400 text-gray-600 dark:text-gray-300 font-medium leading-relaxed max-w-3xl
+                     {$locale === 'ar' ? 'text-right leading-loose font-arabic mx-auto sm:ml-auto' : 'text-left'}"
+             style="font-size: clamp(0.875rem, 2.5vw, 1rem); line-height: {$locale === 'ar' ? '2' : '1.7'};"
              lang="{$locale}">
             {mounted ? $t('services.subtitle') : 'Comprehensive project management, cost control & design support with extensive expertise tailored to contractors, consultants, and clients.'}
           </p>
 
           <!-- Key Stats -->
-          <div class="{heroVisible ? 'animate-fade-in' : 'opacity-0'} transition-all duration-1000 delay-600 flex flex-wrap gap-4 justify-center sm:justify-start" class:sm:justify-end={$locale === 'ar'}>
-            <div class="flex items-center space-x-2 bg-white/80 dark:bg-gray-800/80 rounded-lg px-4 py-2 backdrop-blur-sm border border-purple-200/50 dark:border-purple-700/30">
+          <div class="{heroVisible ? 'animate-fade-in' : 'opacity-0'} transition-all duration-1000 delay-600 flex flex-wrap gap-4 justify-center
+                      {$locale === 'ar' ? 'sm:justify-end' : 'sm:justify-start'}">
+            <div class="flex items-center gap-2 bg-white/80 dark:bg-gray-800/80 rounded-lg px-4 py-2 backdrop-blur-sm border border-purple-200/50 dark:border-purple-700/30
+                        {$locale === 'ar' ? 'flex-row-reverse' : ''}">
               <div class="w-2 h-2 bg-purple-500 rounded-full animate-pulse"></div>
-              <span class="text-xs font-medium text-gray-700 dark:text-gray-300">6 Core Services</span>
+              <span class="text-xs font-medium text-gray-700 dark:text-gray-300 {$locale === 'ar' ? 'font-arabic' : ''}">6 Core Services</span>
             </div>
-            <div class="flex items-center space-x-2 bg-white/80 dark:bg-gray-800/80 rounded-lg px-4 py-2 backdrop-blur-sm border border-blue-200/50 dark:border-blue-700/30">
+            <div class="flex items-center gap-2 bg-white/80 dark:bg-gray-800/80 rounded-lg px-4 py-2 backdrop-blur-sm border border-blue-200/50 dark:border-blue-700/30
+                        {$locale === 'ar' ? 'flex-row-reverse' : ''}">
               <div class="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
-              <span class="text-xs font-medium text-gray-700 dark:text-gray-300">All Client Types</span>
+              <span class="text-xs font-medium text-gray-700 dark:text-gray-300 {$locale === 'ar' ? 'font-arabic' : ''}">All Client Types</span>
             </div>
-            <div class="flex items-center space-x-2 bg-white/80 dark:bg-gray-800/80 rounded-lg px-4 py-2 backdrop-blur-sm border border-green-200/50 dark:border-green-700/30">
+            <div class="flex items-center gap-2 bg-white/80 dark:bg-gray-800/80 rounded-lg px-4 py-2 backdrop-blur-sm border border-green-200/50 dark:border-green-700/30
+                        {$locale === 'ar' ? 'flex-row-reverse' : ''}">
               <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-              <span class="text-xs font-medium text-gray-700 dark:text-gray-300">West Midlands</span>
+              <span class="text-xs font-medium text-gray-700 dark:text-gray-300 {$locale === 'ar' ? 'font-arabic' : ''}">West Midlands</span>
             </div>
           </div>
         </div>
